@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fitplan/paquete_semanal/v1",
+  "title": "Paquete semanal que FitPlan exporta para el LLM",
+  "description": "Lo calcula la app. El LLM debe tratar 'restricciones' y 'objetivos' como límites duros. No incluye nombre ni ningún identificador personal.",
+  "type": "object",
+  "required": ["schema", "paquete_id", "generado", "semana", "perfil", "restricciones", "estado", "semana_anterior", "objetivos", "catalogo_ejercicios"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "paquete_semanal/v1" },
+    "paquete_id": { "type": "string", "description": "UUID; el plan debe devolverlo igual" },
+    "generado": { "type": "string", "format": "date-time" },
+    "semana": {
+      "type": "object",
+      "required": ["inicio", "fin", "bloque", "semana_en_bloque", "fase"],
+      "additionalProperties": false,
+      "properties": {
+        "inicio": { "type": "string", "format": "date", "description": "Lunes" },
+        "fin": { "type": "string", "format": "date", "description": "Domingo" },
+        "bloque": { "type": "integer", "minimum": 1 },
+        "semana_en_bloque": { "type": "integer", "minimum": 1 },
+        "fase": { "enum": ["reintroduccion", "acumulacion", "intensificacion", "descarga", "mantenimiento"] }
+      }
+    },
+    "perfil": {
+      "type": "object",
+      "required": ["sexo", "edad", "altura_cm", "objetivo", "nivel", "disponibilidad", "material", "preferencias_alimentarias", "horario_comidas"],
+      "additionalProperties": false,
+      "properties": {
+        "sexo": { "enum": ["H", "M"] },
+        "edad": { "type": "integer" },
+        "altura_cm": { "type": "number" },
+        "objetivo": {
+          "type": "object",
+          "required": ["principal"],
+          "additionalProperties": false,
+          "properties": {
+            "principal": { "enum": ["perder_grasa", "recomposicion", "ganar_musculo", "rendimiento", "salud_general"] },
+            "secundarios": { "type": "array", "items": { "type": "string" } },
+            "notas": { "type": "string" }
+          }
+        },
+        "nivel": { "enum": ["principiante", "intermedio", "avanzado"] },
+        "disponibilidad": {
+          "type": "array",
+          "description": "Franjas en las que el usuario puede entrenar",
+          "items": {
+            "type": "object",
+            "required": ["dia", "desde", "hasta", "lugar"],
+            "additionalProperties": false,
+            "properties": {
+              "dia": { "$ref": "#/$defs/dia" },
+              "desde": { "$ref": "#/$defs/hora" },
+              "hasta": { "$ref": "#/$defs/hora" },
+              "lugar": { "enum": ["gimnasio", "casa", "exterior"] }
+            }
+          }
+        },
+        "material": { "type": "array", "items": { "type": "string" }, "description": "barra, mancuernas, poleas, prensa, cinta, remo, bici_indoor, eliptica..." },
+        "preferencias_alimentarias": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tipo_dieta": { "type": "string", "description": "omnivora | vegetariana | ..." },
+            "no_le_gusta": { "type": "array", "items": { "type": "string" } },
+            "le_gusta": { "type": "array", "items": { "type": "string" } },
+            "cocina": { "type": "string", "description": "mediterránea, colombiana..." },
+            "tiempo_cocina_max_min": { "type": "integer" },
+            "batch_cooking": { "type": "boolean" },
+            "comidas_fuera": { "type": "array", "items": { "type": "string" }, "description": "p.ej. 'almuerzo L-V en oficina (tupper)'" }
+          }
+        },
+        "horario_comidas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["comida", "hora"],
+            "additionalProperties": false,
+            "properties": {
+              "comida": { "$ref": "#/$defs/comida" },
+              "hora": { "$ref": "#/$defs/hora" }
+            }
+          }
+        }
+      }
+    },
+    "restricciones": {
+      "type": "object",
+      "description": "Resultado de fusionar el perfil médico con las restricciones declaradas. Límites DUROS.",
+      "required": ["ejercicio", "dieta", "limites", "senales_alarma", "requiere_valoracion_medica"],
+      "additionalProperties": false,
+      "properties": {
+        "ejercicio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nivel", "ambito", "descripcion"],
+            "properties": {
+              "id": { "type": "string" },
+              "nivel": { "enum": ["prohibido", "limitar", "precaucion"] },
+              "ambito": { "type": "array", "items": { "type": "string" } },
+              "descripcion": { "type": "string" },
+              "limite": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "dieta": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nivel", "alimento_o_grupo"],
+            "properties": {
+              "id": { "type": "string" },
+              "nivel": { "enum": ["prohibido", "limitar", "precaucion"] },
+              "alimento_o_grupo": { "type": "string" },
+              "limite": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "limites": { "type": "object" },
+        "senales_alarma": { "type": "array", "items": { "type": "string" } },
+        "requiere_valoracion_medica": { "type": "boolean" }
+      }
+    },
+    "estado": {
+      "type": "object",
+      "required": ["composicion_actual", "tendencia_4s"],
+      "additionalProperties": false,
+      "properties": {
+        "composicion_actual": {
+          "type": "object",
+          "properties": {
+            "fecha": { "type": "string", "format": "date" },
+            "peso_kg": { "type": "number" },
+            "grasa_pct": { "type": ["number", "null"] },
+            "musculo_esqueletico_kg": { "type": ["number", "null"] },
+            "masa_magra_kg": { "type": ["number", "null"] },
+            "tmb_kcal": { "type": ["number", "null"] }
+          }
+        },
+        "tendencia_4s": {
+          "type": "object",
+          "description": "Pendiente semanal por regresión sobre la media móvil de 7 días",
+          "properties": {
+            "peso_kg_sem": { "type": ["number", "null"] },
+            "grasa_pct_sem": { "type": ["number", "null"] },
+            "musculo_esqueletico_kg_sem": { "type": ["number", "null"] },
+            "n_mediciones": { "type": "integer" }
+          }
+        },
+        "recuperacion": {
+          "type": ["object", "null"],
+          "description": "Si hay datos de Garmin Monitor",
+          "properties": {
+            "fc_reposo_media": { "type": ["number", "null"] },
+            "fc_reposo_delta_vs_28d": { "type": ["number", "null"] },
+            "sueno_h_media": { "type": ["number", "null"] },
+            "estres_medio": { "type": ["number", "null"] }
+          }
+        },
+        "cardio_referencia": {
+          "type": ["object", "null"],
+          "properties": {
+            "fc_max_estimada": { "type": ["integer", "null"] },
+            "zonas_fc": {
+              "type": "object",
+              "description": "Z1..Z5 → [min, max] ppm",
+              "additionalProperties": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 }
+            },
+            "ritmo_z2_cinta_min_km": { "type": ["string", "null"] },
+            "ritmo_z2_exterior_min_km": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "semana_anterior": {
+      "type": "object",
+      "required": ["sesiones_planificadas", "sesiones_realizadas", "adherencia_nutricion_pct", "carga"],
+      "additionalProperties": false,
+      "properties": {
+        "sesiones_planificadas": { "type": "integer" },
+        "sesiones_realizadas": { "type": "integer" },
+        "adherencia_nutricion_pct": { "type": ["number", "null"] },
+        "carga": {
+          "type": "object",
+          "properties": {
+            "trimp_semana": { "type": ["number", "null"] },
+            "acwr": { "type": ["number", "null"], "description": "carga aguda 7d / crónica 28d" },
+            "volumen_fuerza_kg": { "type": ["number", "null"] },
+            "minutos_cardio": { "type": ["number", "null"] },
+            "minutos_por_zona": { "type": "object", "additionalProperties": { "type": "number" } }
+          }
+        },
+        "sesiones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fecha": { "type": "string", "format": "date" },
+              "tipo": { "$ref": "#/$defs/tipo_actividad" },
+              "duracion_min": { "type": "number" },
+              "fc_media": { "type": ["number", "null"] },
+              "distancia_km": { "type": ["number", "null"] },
+              "rpe": { "type": ["number", "null"] }
+            }
+          }
+        },
+        "comentarios_usuario": { "type": "string", "description": "Molestias, sensaciones, cambios de agenda" }
+      }
+    },
+    "objetivos": {
+      "type": "object",
+      "description": "Calculados por la app. El plan debe cumplirlos.",
+      "required": ["entreno", "nutricion"],
+      "additionalProperties": false,
+      "properties": {
+        "entreno": {
+          "type": "object",
+          "required": ["sesiones_fuerza", "sesiones_cardio", "min_z2_semana", "dias_descanso_min", "progresiones"],
+          "additionalProperties": false,
+          "properties": {
+            "sesiones_fuerza": { "type": "integer" },
+            "sesiones_cardio": { "type": "integer" },
+            "min_z2_semana": { "type": "integer" },
+            "min_alta_intensidad_max": { "type": "integer" },
+            "dias_descanso_min": { "type": "integer" },
+            "series_semana_por_grupo": { "type": "object", "additionalProperties": { "type": "integer" } },
+            "incremento_carga_max_pct": { "type": "number", "description": "Tope de subida de peso por ejercicio respecto a la semana anterior" },
+            "progresiones": {
+              "type": "array",
+              "description": "Prescripción por ejercicio calculada con doble progresión",
+              "items": {
+                "type": "object",
+                "required": ["exercise_template_id", "nombre", "series", "reps_min", "reps_max", "peso_kg", "motivo"],
+                "additionalProperties": false,
+                "properties": {
+                  "exercise_template_id": { "type": "string" },
+                  "nombre": { "type": "string" },
+                  "series": { "type": "integer" },
+                  "reps_min": { "type": "integer" },
+                  "reps_max": { "type": "integer" },
+                  "peso_kg": { "type": ["number", "null"] },
+                  "rpe_objetivo": { "type": ["number", "null"] },
+                  "motivo": { "enum": ["subir_peso", "subir_reps", "mantener", "descarga", "nuevo", "estancado_cambiar"] },
+                  "historial": { "type": "string", "description": "p.ej. '50×10,10,10 (3 sesiones iguales)'" }
+                }
+              }
+            }
+          }
+        },
+        "nutricion": {
+          "type": "object",
+          "required": ["kcal_entreno", "kcal_descanso", "proteina_g", "grasa_g_min", "fibra_g_min", "agua_ml"],
+          "additionalProperties": false,
+          "properties": {
+            "kcal_entreno": { "type": "integer" },
+            "kcal_descanso": { "type": "integer" },
+            "proteina_g": { "type": "integer" },
+            "grasa_g_min": { "type": "integer" },
+            "carbohidratos_g_entreno": { "type": ["integer", "null"] },
+            "carbohidratos_g_descanso": { "type": ["integer", "null"] },
+            "fibra_g_min": { "type": "integer" },
+            "agua_ml": { "type": "integer" },
+            "tolerancia_kcal_pct": { "type": "number", "default": 5 },
+            "base_calculo": { "type": "string", "description": "Explicación: TMB, factor de actividad, déficit, ajuste por tendencia" }
+          }
+        }
+      }
+    },
+    "catalogo_ejercicios": {
+      "type": "array",
+      "description": "Ejercicios permitidos (ya filtrados por restricciones), con su id de Hevy. El plan solo puede usar estos.",
+      "items": {
+        "type": "object",
+        "required": ["exercise_template_id", "nombre", "grupo", "patrones"],
+        "additionalProperties": false,
+        "properties": {
+          "exercise_template_id": { "type": "string" },
+          "nombre": { "type": "string" },
+          "grupo": { "type": "string" },
+          "patrones": { "type": "array", "items": { "type": "string" } },
+          "material": { "type": "string" }
+        }
+      }
+    },
+    "rutinas_hevy_actuales": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "routine_id": { "type": "string" },
+          "titulo": { "type": "string" },
+          "ejercicios": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "instrucciones_extra": { "type": "string", "description": "Peticiones del usuario para esta semana" }
+  },
+  "$defs": {
+    "dia": { "enum": ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"] },
+    "hora": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+    "comida": { "enum": ["desayuno", "media_manana", "almuerzo", "merienda", "cena", "pre_entreno", "post_entreno", "recena"] },
+    "tipo_actividad": { "enum": ["fuerza", "cinta", "carrera_exterior", "bici_indoor", "remo", "eliptica", "hiit", "movilidad", "caminar", "descanso"] }
+  }
+}

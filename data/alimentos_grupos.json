@@ -1,0 +1,692 @@
+{
+  "schema": "alimentos_grupos/v1",
+  "descripcion": "Diccionario local para la regla V5. Cada grupo lista términos que lo contienen (incluye) y expresiones que lo anulan (excepciones). El matcher normaliza (minúsculas, sin tildes, singular simple) y busca frases completas. Las excepciones se evalúan primero.",
+  "alias": {
+    "marisco": [
+      "crustaceos",
+      "moluscos"
+    ],
+    "mariscos": [
+      "crustaceos",
+      "moluscos"
+    ],
+    "frutos secos": [
+      "frutos_cascara",
+      "cacahuete"
+    ],
+    "nueces": [
+      "frutos_cascara"
+    ],
+    "leche": [
+      "lacteos"
+    ],
+    "lácteos": [
+      "lacteos"
+    ],
+    "trigo": [
+      "gluten"
+    ],
+    "cereales con gluten": [
+      "gluten"
+    ],
+    "sal": [
+      "sodio_alto"
+    ],
+    "sodio": [
+      "sodio_alto"
+    ],
+    "azúcar": [
+      "azucares_anadidos"
+    ],
+    "azúcares": [
+      "azucares_anadidos"
+    ],
+    "dulces": [
+      "azucares_anadidos"
+    ],
+    "embutido": [
+      "carne_procesada"
+    ],
+    "embutidos": [
+      "carne_procesada"
+    ],
+    "carne procesada": [
+      "carne_procesada"
+    ],
+    "grasas saturadas": [
+      "grasas_saturadas"
+    ],
+    "café": [
+      "cafeina"
+    ],
+    "ácido úrico": [
+      "purinas"
+    ],
+    "gota": [
+      "purinas"
+    ],
+    "vitamina k": [
+      "vitamina_k"
+    ],
+    "potasio": [
+      "potasio_alto"
+    ],
+    "bebidas alcohólicas": [
+      "alcohol"
+    ]
+  },
+  "grupos": {
+    "gluten": {
+      "alergeno_ue": true,
+      "incluye": [
+        "trigo",
+        "harina",
+        "pan",
+        "pasta",
+        "espagueti",
+        "macarron",
+        "fideo",
+        "cuscus",
+        "bulgur",
+        "semola",
+        "espelta",
+        "kamut",
+        "centeno",
+        "cebada",
+        "malta",
+        "seitan",
+        "tortilla de trigo",
+        "wrap",
+        "pan rallado",
+        "rebozado",
+        "empanado",
+        "galleta",
+        "bizcocho",
+        "croissant",
+        "magdalena",
+        "pizza",
+        "cerveza",
+        "avena",
+        "copos de avena",
+        "salsa de soja"
+      ],
+      "excepciones": [
+        "sin gluten",
+        "avena sin gluten",
+        "pan sin gluten",
+        "pasta sin gluten",
+        "harina de arroz",
+        "harina de maiz",
+        "harina de garbanzo",
+        "harina de almendra",
+        "tamari sin gluten",
+        "cerveza sin gluten",
+        "pan de maiz 100%"
+      ],
+      "notas": "La avena solo es apta si está certificada sin gluten."
+    },
+    "crustaceos": {
+      "alergeno_ue": true,
+      "incluye": [
+        "gamba",
+        "langostino",
+        "cigala",
+        "bogavante",
+        "langosta",
+        "cangrejo",
+        "centollo",
+        "buey de mar",
+        "necora",
+        "carabinero",
+        "quisquilla",
+        "surimi",
+        "palito de cangrejo"
+      ],
+      "excepciones": []
+    },
+    "moluscos": {
+      "alergeno_ue": true,
+      "incluye": [
+        "mejillon",
+        "almeja",
+        "berberecho",
+        "navaja",
+        "ostra",
+        "vieira",
+        "zamburina",
+        "calamar",
+        "chipiron",
+        "sepia",
+        "pulpo",
+        "caracol",
+        "choco",
+        "potón"
+      ],
+      "excepciones": []
+    },
+    "huevo": {
+      "alergeno_ue": true,
+      "incluye": [
+        "huevo",
+        "clara",
+        "yema",
+        "tortilla",
+        "revuelto",
+        "mayonesa",
+        "merengue",
+        "alioli",
+        "flan",
+        "natilla",
+        "huevina",
+        "ovoproducto"
+      ],
+      "excepciones": [
+        "tortilla de trigo",
+        "tortilla de maiz",
+        "mayonesa vegana",
+        "alioli sin huevo"
+      ]
+    },
+    "pescado": {
+      "alergeno_ue": true,
+      "incluye": [
+        "pescado",
+        "merluza",
+        "bacalao",
+        "salmon",
+        "atun",
+        "bonito",
+        "sardina",
+        "boqueron",
+        "anchoa",
+        "caballa",
+        "jurel",
+        "dorada",
+        "lubina",
+        "rape",
+        "rodaballo",
+        "lenguado",
+        "gallo",
+        "trucha",
+        "pez espada",
+        "emperador",
+        "panga",
+        "abadejo",
+        "caviar",
+        "hueva",
+        "surimi",
+        "salsa worcestershire",
+        "salsa de pescado"
+      ],
+      "excepciones": []
+    },
+    "cacahuete": {
+      "alergeno_ue": true,
+      "incluye": [
+        "cacahuete",
+        "mani",
+        "crema de cacahuete",
+        "mantequilla de cacahuete",
+        "aceite de cacahuete"
+      ],
+      "excepciones": []
+    },
+    "soja": {
+      "alergeno_ue": true,
+      "incluye": [
+        "soja",
+        "tofu",
+        "tempeh",
+        "edamame",
+        "miso",
+        "salsa de soja",
+        "tamari",
+        "bebida de soja",
+        "proteina de soja",
+        "lecitina de soja",
+        "texturizado de soja",
+        "heura"
+      ],
+      "excepciones": []
+    },
+    "lacteos": {
+      "alergeno_ue": true,
+      "incluye": [
+        "leche",
+        "yogur",
+        "queso",
+        "requeson",
+        "cuajada",
+        "kefir",
+        "nata",
+        "mantequilla",
+        "crema de leche",
+        "bechamel",
+        "helado",
+        "suero de leche",
+        "proteina whey",
+        "whey",
+        "caseina",
+        "skyr",
+        "burrata",
+        "mozzarella",
+        "ricotta",
+        "leche en polvo",
+        "batido de leche"
+      ],
+      "excepciones": [
+        "leche de almendra",
+        "leche de avena",
+        "leche de coco",
+        "leche de arroz",
+        "bebida de soja",
+        "bebida de avena",
+        "bebida de almendra",
+        "yogur de soja",
+        "yogur de coco",
+        "mantequilla de cacahuete",
+        "mantequilla de almendra",
+        "crema de cacahuete",
+        "queso vegano"
+      ],
+      "notas": "El aislado de suero (whey isolate) sigue siendo un lácteo aunque tenga poca lactosa."
+    },
+    "lactosa": {
+      "alergeno_ue": false,
+      "incluye": [
+        "leche",
+        "yogur",
+        "nata",
+        "helado",
+        "requeson",
+        "queso fresco",
+        "queso de burgos",
+        "cuajada",
+        "leche en polvo",
+        "bechamel",
+        "whey concentrado",
+        "batido de leche"
+      ],
+      "excepciones": [
+        "sin lactosa",
+        "leche sin lactosa",
+        "yogur sin lactosa",
+        "whey isolate",
+        "queso curado",
+        "parmesano",
+        "leche de almendra",
+        "leche de avena",
+        "bebida de soja",
+        "bebida de avena"
+      ],
+      "notas": "Quesos curados y aislado de suero suelen tolerarse; confirmar con el usuario."
+    },
+    "frutos_cascara": {
+      "alergeno_ue": true,
+      "incluye": [
+        "almendra",
+        "avellana",
+        "nuez",
+        "anacardo",
+        "pistacho",
+        "nuez de brasil",
+        "nuez de macadamia",
+        "pecana",
+        "pinon",
+        "crema de almendra",
+        "harina de almendra",
+        "leche de almendra",
+        "bebida de almendra",
+        "turron",
+        "mazapan",
+        "praline",
+        "nutella",
+        "pesto"
+      ],
+      "excepciones": [
+        "nuez moscada"
+      ]
+    },
+    "apio": {
+      "alergeno_ue": true,
+      "incluye": [
+        "apio",
+        "apionabo",
+        "sal de apio",
+        "caldo de verduras",
+        "sofrito comercial"
+      ],
+      "excepciones": []
+    },
+    "mostaza": {
+      "alergeno_ue": true,
+      "incluye": [
+        "mostaza",
+        "salsa mostaza",
+        "vinagreta de mostaza",
+        "curry en polvo"
+      ],
+      "excepciones": []
+    },
+    "sesamo": {
+      "alergeno_ue": true,
+      "incluye": [
+        "sesamo",
+        "ajonjoli",
+        "tahini",
+        "tahina",
+        "hummus",
+        "aceite de sesamo",
+        "gomasio"
+      ],
+      "excepciones": []
+    },
+    "sulfitos": {
+      "alergeno_ue": true,
+      "incluye": [
+        "vino",
+        "vinagre de vino",
+        "fruta desecada",
+        "orejon",
+        "uva pasa",
+        "embutido curado",
+        "mostaza",
+        "salsa worcestershire",
+        "cerveza",
+        "sidra"
+      ],
+      "excepciones": [
+        "vinagre de manzana"
+      ]
+    },
+    "altramuces": {
+      "alergeno_ue": true,
+      "incluye": [
+        "altramuz",
+        "chocho",
+        "harina de altramuz"
+      ],
+      "excepciones": []
+    },
+    "sodio_alto": {
+      "alergeno_ue": false,
+      "incluye": [
+        "sal",
+        "jamon serrano",
+        "jamon iberico",
+        "jamon cocido",
+        "chorizo",
+        "salchichon",
+        "fuet",
+        "lomo embuchado",
+        "bacon",
+        "salchicha",
+        "anchoa",
+        "bacalao salado",
+        "salazon",
+        "queso curado",
+        "queso azul",
+        "aceituna",
+        "encurtido",
+        "pepinillo",
+        "alcaparra",
+        "salsa de soja",
+        "caldo en pastilla",
+        "pastilla de caldo",
+        "sopa de sobre",
+        "patatas fritas de bolsa",
+        "snack salado",
+        "frutos secos salados",
+        "pizza",
+        "comida precocinada",
+        "ketchup"
+      ],
+      "excepciones": [
+        "sin sal",
+        "bajo en sal",
+        "sal reducida",
+        "salmon",
+        "salsa de tomate casera"
+      ],
+      "notas": "Además del filtro por términos, la app suma el sodio de la BD nutricional contra limites.sodio_max_mg."
+    },
+    "azucares_anadidos": {
+      "alergeno_ue": false,
+      "incluye": [
+        "azucar",
+        "azucar moreno",
+        "panela",
+        "miel",
+        "sirope",
+        "jarabe de arce",
+        "jarabe de agave",
+        "caramelo",
+        "chocolate con leche",
+        "cacao azucarado",
+        "mermelada",
+        "refresco",
+        "zumo envasado",
+        "bolleria",
+        "galleta",
+        "bizcocho",
+        "donut",
+        "helado",
+        "cereales de desayuno",
+        "natillas",
+        "flan",
+        "leche condensada",
+        "batido azucarado",
+        "bebida isotonica"
+      ],
+      "excepciones": [
+        "sin azucar",
+        "sin azucares anadidos",
+        "chocolate negro 85%",
+        "cacao puro"
+      ]
+    },
+    "alcohol": {
+      "alergeno_ue": false,
+      "incluye": [
+        "vino",
+        "cerveza",
+        "sidra",
+        "cava",
+        "champan",
+        "vermut",
+        "licor",
+        "ron",
+        "whisky",
+        "vodka",
+        "ginebra",
+        "tequila",
+        "aguardiente",
+        "orujo",
+        "pacharan",
+        "sangria"
+      ],
+      "excepciones": [
+        "cerveza sin alcohol 0,0",
+        "cerveza 0,0",
+        "vino desalcoholizado",
+        "vinagre de vino"
+      ],
+      "notas": "El vino usado para cocinar pierde solo parte del alcohol: si es 'prohibido', excluirlo también de las recetas."
+    },
+    "grasas_saturadas": {
+      "alergeno_ue": false,
+      "incluye": [
+        "mantequilla",
+        "manteca",
+        "nata",
+        "tocino",
+        "panceta",
+        "bacon",
+        "chorizo",
+        "morcilla",
+        "salchicha",
+        "hamburguesa",
+        "costilla de cerdo",
+        "queso curado",
+        "aceite de coco",
+        "aceite de palma",
+        "bolleria industrial",
+        "croissant",
+        "hojaldre",
+        "chocolate con leche"
+      ],
+      "excepciones": [
+        "aceite de oliva"
+      ],
+      "notas": "Además de los términos, la app calcula AGS (g) del día con la BD nutricional."
+    },
+    "carne_procesada": {
+      "alergeno_ue": false,
+      "incluye": [
+        "jamon serrano",
+        "jamon iberico",
+        "jamon cocido",
+        "pavo en lonchas",
+        "fiambre",
+        "chorizo",
+        "salchichon",
+        "fuet",
+        "lomo embuchado",
+        "mortadela",
+        "salami",
+        "bacon",
+        "salchicha",
+        "frankfurt",
+        "morcilla",
+        "sobrasada",
+        "cecina",
+        "pate",
+        "carne picada preparada",
+        "nugget",
+        "hamburguesa industrial"
+      ],
+      "excepciones": []
+    },
+    "carne_roja": {
+      "alergeno_ue": false,
+      "incluye": [
+        "ternera",
+        "vacuno",
+        "buey",
+        "cerdo",
+        "lomo de cerdo",
+        "solomillo de cerdo",
+        "cordero",
+        "cabrito",
+        "chuleton",
+        "entrecot",
+        "carne picada de ternera",
+        "carne picada mixta"
+      ],
+      "excepciones": []
+    },
+    "cafeina": {
+      "alergeno_ue": false,
+      "incluye": [
+        "cafe",
+        "espresso",
+        "te negro",
+        "te verde",
+        "te matcha",
+        "mate",
+        "cola",
+        "bebida energetica",
+        "pre-entreno",
+        "preentreno",
+        "guarana",
+        "chocolate negro"
+      ],
+      "excepciones": [
+        "cafe descafeinado",
+        "descafeinado",
+        "rooibos",
+        "infusion"
+      ]
+    },
+    "purinas": {
+      "alergeno_ue": false,
+      "incluye": [
+        "higado",
+        "rinon",
+        "casquería",
+        "mollejas",
+        "anchoa",
+        "sardina",
+        "boqueron",
+        "arenque",
+        "caballa",
+        "mejillon",
+        "gamba",
+        "langostino",
+        "extracto de carne",
+        "caldo de carne",
+        "cerveza",
+        "carne de caza"
+      ],
+      "excepciones": [
+        "cerveza sin alcohol 0,0"
+      ],
+      "notas": "La cerveza, incluso sin alcohol, aporta purinas: valorar según el perfil médico."
+    },
+    "pomelo": {
+      "alergeno_ue": false,
+      "incluye": [
+        "pomelo",
+        "zumo de pomelo",
+        "naranja amarga",
+        "sanguina",
+        "toronja"
+      ],
+      "excepciones": [],
+      "notas": "Interacción con varios fármacos (estatinas, antihipertensivos, etc.)."
+    },
+    "vitamina_k": {
+      "alergeno_ue": false,
+      "incluye": [
+        "espinaca",
+        "acelga",
+        "col rizada",
+        "kale",
+        "brocoli",
+        "col de bruselas",
+        "berza",
+        "grelos",
+        "canonigo",
+        "rucula",
+        "perejil",
+        "lechuga romana"
+      ],
+      "excepciones": [],
+      "notas": "Con anticoagulantes antivitamina K el objetivo suele ser CONSUMO ESTABLE, no eliminarlo: tratar como 'limitar' y repartir de forma regular."
+    },
+    "potasio_alto": {
+      "alergeno_ue": false,
+      "incluye": [
+        "platano",
+        "aguacate",
+        "patata",
+        "boniato",
+        "tomate concentrado",
+        "espinaca",
+        "legumbre",
+        "lenteja",
+        "garbanzo",
+        "alubia",
+        "fruta desecada",
+        "orejon",
+        "datil",
+        "uva pasa",
+        "frutos secos",
+        "zumo de naranja",
+        "sal sin sodio",
+        "sustituto de sal"
+      ],
+      "excepciones": []
+    }
+  }
+}

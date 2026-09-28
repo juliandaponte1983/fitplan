@@ -1,0 +1,29 @@
+{
+  "schema": "periodizacion/v1",
+  "descripcion": "Bloques de 4 semanas (3 de carga + 1 de descarga). El motor asigna semana.fase del paquete según esta tabla y los ajustes automáticos.",
+  "bloque_inicial": [
+    { "semana": 1, "fase": "reintroduccion", "rpe_objetivo": 6.5, "volumen_pct": 70, "intensidad_pct_ultimo_top_set": 90 },
+    { "semana": 2, "fase": "acumulacion",    "rpe_objetivo": 7,   "volumen_pct": 85, "intensidad_pct_ultimo_top_set": 95 },
+    { "semana": 3, "fase": "acumulacion",    "rpe_objetivo": 8,   "volumen_pct": 100, "intensidad_pct_ultimo_top_set": 100 },
+    { "semana": 4, "fase": "descarga",       "rpe_objetivo": 6,   "volumen_pct": 60, "intensidad_pct_ultimo_top_set": 90 }
+  ],
+  "bloque_estandar": [
+    { "semana": 1, "fase": "acumulacion",     "rpe_objetivo": 7,   "volumen_pct": 90 },
+    { "semana": 2, "fase": "acumulacion",     "rpe_objetivo": 7.5, "volumen_pct": 100 },
+    { "semana": 3, "fase": "intensificacion", "rpe_objetivo": 8.5, "volumen_pct": 90 },
+    { "semana": 4, "fase": "descarga",        "rpe_objetivo": 6,   "volumen_pct": 60 }
+  ],
+  "progresion": {
+    "metodo": "doble_progresion",
+    "subir_peso_si": "todas las series de trabajo alcanzan reps_max con RPE <= rpe_objetivo",
+    "incremento_kg": { "tren_superior_barra": 2.5, "tren_inferior_barra": 5, "mancuerna": 2, "maquina_polea": 2.5 },
+    "incremento_max_pct": 5,
+    "estancado_si": "2 sesiones seguidas sin llegar a reps_min, o 4 semanas sin progreso en peso ni reps",
+    "accion_estancado": "mantener una semana; si persiste, variante del ejercicio o cambio de rango de repeticiones en el siguiente bloque"
+  },
+  "ajustes_automaticos": {
+    "reinicio_bloque_si_parada_dias": 14,
+    "descarga_anticipada_si": ["ACWR > 1.5", "FC reposo 7d > media 28d + 5 ppm durante 3+ días", "adherencia entreno < 50 % dos semanas seguidas"],
+    "rpe_sin_registro": "si no hay RPE, se estima con reps realizadas vs objetivo y FC media de la sesión"
+  }
+}

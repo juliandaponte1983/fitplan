@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fitplan/alimento_nutricion/v1",
+  "title": "Entrada de la base nutricional local (por 100 g de porción comestible, en crudo salvo que se indique)",
+  "type": "object",
+  "required": ["id", "nombre", "fuente", "fuente_id", "estado", "por_100g"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "nombre": { "type": "string", "description": "Nombre normalizado en español, minúsculas" },
+    "sinonimos": { "type": "array", "items": { "type": "string" } },
+    "fuente": { "enum": ["bedca", "usda_fdc", "etiqueta", "manual"] },
+    "fuente_id": { "type": ["string", "null"] },
+    "estado": { "enum": ["crudo", "cocido", "listo_consumo"] },
+    "factor_coccion": { "type": ["number", "null"], "description": "peso cocido / peso crudo (arroz ≈ 2.8, pasta ≈ 2.2, pollo ≈ 0.75)" },
+    "grupos": { "type": "array", "items": { "type": "string" }, "description": "Claves de data/alimentos_grupos.json" },
+    "por_100g": {
+      "type": "object",
+      "required": ["kcal", "proteina_g", "carbohidratos_g", "grasa_g"],
+      "additionalProperties": false,
+      "properties": {
+        "kcal": { "type": "number" },
+        "proteina_g": { "type": "number" },
+        "carbohidratos_g": { "type": "number" },
+        "azucares_g": { "type": ["number", "null"] },
+        "fibra_g": { "type": ["number", "null"] },
+        "grasa_g": { "type": "number" },
+        "ags_g": { "type": ["number", "null"], "description": "Ácidos grasos saturados" },
+        "sodio_mg": { "type": ["number", "null"] },
+        "potasio_mg": { "type": ["number", "null"] },
+        "vitamina_k_ug": { "type": ["number", "null"] },
+        "cafeina_mg": { "type": ["number", "null"] },
+        "alcohol_g": { "type": ["number", "null"] }
+      }
+    },
+    "porciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nombre", "gramos"],
+        "additionalProperties": false,
+        "properties": { "nombre": { "type": "string" }, "gramos": { "type": "number" } }
+      }
+    }
+  }
+}

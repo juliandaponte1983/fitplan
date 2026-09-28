@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fitplan/plan_semanal/v1",
+  "title": "Plan semanal que devuelve el LLM",
+  "type": "object",
+  "required": ["schema", "paquete_id", "semana_inicio", "resumen", "entrenamiento", "nutricion", "autochequeo"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "plan_semanal/v1" },
+    "paquete_id": { "type": "string" },
+    "semana_inicio": { "type": "string", "format": "date" },
+    "resumen": {
+      "type": "object",
+      "required": ["enfoque", "cambios_vs_anterior"],
+      "additionalProperties": false,
+      "properties": {
+        "enfoque": { "type": "string", "maxLength": 400 },
+        "cambios_vs_anterior": { "type": "array", "items": { "type": "string" } },
+        "avisos": { "type": "array", "items": { "type": "string" } },
+        "preguntas_usuario": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "entrenamiento": {
+      "type": "object",
+      "required": ["dias", "rutinas"],
+      "additionalProperties": false,
+      "properties": {
+        "dias": {
+          "type": "array", "minItems": 7, "maxItems": 7,
+          "items": {
+            "type": "object",
+            "required": ["fecha", "dia", "sesiones"],
+            "additionalProperties": false,
+            "properties": {
+              "fecha": { "type": "string", "format": "date" },
+              "dia": { "$ref": "#/$defs/dia" },
+              "sesiones": {
+                "type": "array",
+                "description": "Vacío = descanso",
+                "items": { "$ref": "#/$defs/sesion" }
+              },
+              "notas": { "type": "string" }
+            }
+          }
+        },
+        "rutinas": {
+          "type": "array",
+          "description": "Rutinas de fuerza de la semana; la app las sube a Hevy (PUT si routine_id existe, POST si no)",
+          "items": { "$ref": "#/$defs/rutina" }
+        }
+      }
+    },
+
+    "nutricion": {
+      "type": "object",
+      "required": ["objetivos_dia", "dias", "recetas", "lista_compra", "alimentos_evitar"],
+      "additionalProperties": false,
+      "properties": {
+        "objetivos_dia": {
+          "type": "object",
+          "required": ["entreno", "descanso"],
+          "additionalProperties": false,
+          "properties": {
+            "entreno": { "$ref": "#/$defs/macros" },
+            "descanso": { "$ref": "#/$defs/macros" }
+          }
+        },
+        "dias": {
+          "type": "array", "minItems": 7, "maxItems": 7,
+          "items": {
+            "type": "object",
+            "required": ["fecha", "tipo_dia", "comidas", "totales"],
+            "additionalProperties": false,
+            "properties": {
+              "fecha": { "type": "string", "format": "date" },
+              "tipo_dia": { "enum": ["entreno", "descanso"] },
+              "comidas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["comida", "hora", "items"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "comida": { "$ref": "#/$defs/comida" },
+                    "hora": { "$ref": "#/$defs/hora" },
+                    "items": {
+                      "type": "array", "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "required": ["raciones"],
+                        "additionalProperties": false,
+                        "description": "O bien receta_id (con raciones), o bien alimento + gramos",
+                        "properties": {
+                          "receta_id": { "type": "string" },
+                          "alimento": { "type": "string" },
+                          "gramos": { "type": "number" },
+                          "raciones": { "type": "number" },
+                          "macros": { "$ref": "#/$defs/macros" }
+                        }
+                      }
+                    },
+                    "notas": { "type": "string" }
+                  }
+                }
+              },
+              "totales": { "$ref": "#/$defs/macros" }
+            }
+          }
+        },
+        "recetas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nombre", "raciones", "tiempo_min", "ingredientes", "pasos", "macros_racion", "alergenos"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^R[0-9]+$" },
+              "nombre": { "type": "string" },
+              "raciones": { "type": "integer", "minimum": 1 },
+              "tiempo_min": { "type": "integer" },
+              "batch": { "type": "boolean", "description": "Se cocina una vez para varios días" },
+              "conservacion": { "type": "string" },
+              "ingredientes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["alimento", "gramos"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "alimento": { "type": "string", "description": "Nombre genérico en minúsculas" },
+                    "gramos": { "type": "number", "description": "Peso en crudo, para todas las raciones" },
+                    "medida_casera": { "type": "string" }
+                  }
+                }
+              },
+              "pasos": { "type": "array", "items": { "type": "string" } },
+              "macros_racion": { "$ref": "#/$defs/macros" },
+              "alergenos": {
+                "type": "array",
+                "description": "Los 14 alérgenos UE",
+                "items": { "enum": ["gluten", "crustaceos", "huevo", "pescado", "cacahuete", "soja", "lacteos", "frutos_cascara", "apio", "mostaza", "sesamo", "sulfitos", "altramuces", "moluscos"] }
+              },
+              "etiquetas": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "lista_compra": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["alimento", "cantidad", "unidad", "seccion"],
+            "additionalProperties": false,
+            "properties": {
+              "alimento": { "type": "string" },
+              "cantidad": { "type": "number" },
+              "unidad": { "enum": ["g", "kg", "ml", "l", "ud", "paquete", "lata", "bote"] },
+              "seccion": { "enum": ["fruta_verdura", "carne", "pescado", "huevos_lacteos", "panaderia", "despensa", "congelados", "bebidas", "otros"] }
+            }
+          }
+        },
+        "alimentos_evitar": {
+          "type": "array",
+          "description": "Incluye TODOS los de restricciones.dieta del paquete más los que el LLM añada",
+          "items": {
+            "type": "object",
+            "required": ["alimento_o_grupo", "nivel", "motivo"],
+            "additionalProperties": false,
+            "properties": {
+              "alimento_o_grupo": { "type": "string" },
+              "nivel": { "enum": ["prohibido", "limitar"] },
+              "motivo": { "type": "string" },
+              "restriccion_id": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "hidratacion": { "type": "string" }
+      }
+    },
+
+    "autochequeo": {
+      "type": "object",
+      "description": "Declaración del LLM. La app lo vuelve a verificar por su cuenta.",
+      "required": ["restricciones_respetadas", "objetivos_cumplidos", "desviaciones"],
+      "additionalProperties": false,
+      "properties": {
+        "restricciones_respetadas": { "type": "boolean" },
+        "objetivos_cumplidos": { "type": "boolean" },
+        "desviaciones": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+
+  "$defs": {
+    "dia": { "enum": ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"] },
+    "hora": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+    "comida": { "enum": ["desayuno", "media_manana", "almuerzo", "merienda", "cena", "pre_entreno", "post_entreno", "recena"] },
+    "zona": { "enum": ["Z1", "Z2", "Z3", "Z4", "Z5"] },
+    "macros": {
+      "type": "object",
+      "required": ["kcal", "proteina_g", "carbohidratos_g", "grasa_g"],
+      "additionalProperties": false,
+      "properties": {
+        "kcal": { "type": "number" },
+        "proteina_g": { "type": "number" },
+        "carbohidratos_g": { "type": "number" },
+        "grasa_g": { "type": "number" },
+        "fibra_g": { "type": "number" }
+      }
+    },
+    "sesion": {
+      "type": "object",
+      "required": ["tipo", "hora", "duracion_min", "objetivo"],
+      "additionalProperties": false,
+      "properties": {
+        "tipo": { "enum": ["fuerza", "cinta", "carrera_exterior", "bici_indoor", "remo", "eliptica", "hiit", "movilidad", "caminar"] },
+        "hora": { "$ref": "#/$defs/hora" },
+        "duracion_min": { "type": "integer", "minimum": 5, "maximum": 180 },
+        "objetivo": { "type": "string" },
+        "rutina_ref": { "type": "string", "description": "id local de la rutina (en entrenamiento.rutinas) si tipo = fuerza" },
+        "bloques_cardio": {
+          "type": "array",
+          "description": "Obligatorio si es cardio. Calentamiento, trabajo e intervalos, y vuelta a la calma.",
+          "items": {
+            "type": "object",
+            "required": ["nombre", "duracion_min", "intensidad"],
+            "additionalProperties": false,
+            "properties": {
+              "nombre": { "type": "string" },
+              "duracion_min": { "type": "number" },
+              "repeticiones": { "type": "integer", "minimum": 1, "default": 1 },
+              "intensidad": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "zona": { "$ref": "#/$defs/zona" },
+                  "rpe": { "type": "number", "minimum": 1, "maximum": 10 },
+                  "ritmo_min_km": { "type": "string", "pattern": "^[0-9]{1,2}:[0-5][0-9]$" },
+                  "velocidad_kmh": { "type": "number" },
+                  "inclinacion_pct": { "type": "number" },
+                  "vatios": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "notas": { "type": "string" }
+      }
+    },
+    "rutina": {
+      "type": "object",
+      "required": ["id", "titulo", "ejercicios"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^RT[0-9]+$" },
+        "hevy_routine_id": { "type": ["string", "null"] },
+        "titulo": { "type": "string", "description": "Así aparecerá en Hevy, p.ej. 'B2S3 · Empuje'" },
+        "notas": { "type": "string" },
+        "ejercicios": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["exercise_template_id", "nombre", "descanso_s", "series"],
+            "additionalProperties": false,
+            "properties": {
+              "exercise_template_id": { "type": "string", "description": "Debe existir en catalogo_ejercicios del paquete" },
+              "nombre": { "type": "string" },
+              "superset_id": { "type": ["integer", "null"] },
+              "descanso_s": { "type": "integer", "minimum": 0, "maximum": 600 },
+              "notas": { "type": "string" },
+              "series": {
+                "type": "array", "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["tipo"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "tipo": { "enum": ["warmup", "normal", "failure", "dropset"], "description": "Mismos valores que Hevy" },
+                    "peso_kg": { "type": ["number", "null"] },
+                    "reps": { "type": ["integer", "null"] },
+                    "reps_rango": { "type": ["array", "null"], "items": { "type": "integer" }, "minItems": 2, "maxItems": 2 },
+                    "duracion_s": { "type": ["integer", "null"] },
+                    "rpe_objetivo": { "type": ["number", "null"] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

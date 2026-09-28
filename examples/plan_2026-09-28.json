@@ -1,0 +1,781 @@
+{
+  "schema": "plan_semanal/v1",
+  "paquete_id": "3f6c2a9e-7b1d-4c55-9a0e-1d2b3c4d5e6f",
+  "semana_inicio": "2026-09-28",
+  "resumen": {
+    "enfoque": "EJEMPLO ESTRUCTURAL (no es un plan real): semana de reintroducción con 3 de fuerza y 2 de Z2.",
+    "cambios_vs_anterior": [
+      "Primera semana del bloque 1"
+    ],
+    "avisos": [],
+    "preguntas_usuario": []
+  },
+  "entrenamiento": {
+    "dias": [
+      {
+        "fecha": "2026-09-28",
+        "dia": "lunes",
+        "sesiones": [
+          {
+            "tipo": "fuerza",
+            "hora": "07:00",
+            "duracion_min": 60,
+            "objetivo": "Fuerza tren superior + bisagra (reintroducción)",
+            "rutina_ref": "RT1"
+          }
+        ]
+      },
+      {
+        "fecha": "2026-09-29",
+        "dia": "martes",
+        "sesiones": [
+          {
+            "tipo": "cinta",
+            "hora": "07:00",
+            "duracion_min": 45,
+            "objetivo": "Base aeróbica Z2",
+            "bloques_cardio": [
+              {
+                "nombre": "Calentamiento",
+                "duracion_min": 8,
+                "intensidad": {
+                  "zona": "Z1",
+                  "velocidad_kmh": 6.0,
+                  "inclinacion_pct": 1
+                }
+              },
+              {
+                "nombre": "Trabajo Z2",
+                "duracion_min": 32,
+                "intensidad": {
+                  "zona": "Z2",
+                  "velocidad_kmh": 7.5,
+                  "inclinacion_pct": 4
+                }
+              },
+              {
+                "nombre": "Vuelta a la calma",
+                "duracion_min": 5,
+                "intensidad": {
+                  "zona": "Z1",
+                  "rpe": 2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "fecha": "2026-09-30",
+        "dia": "miercoles",
+        "sesiones": [
+          {
+            "tipo": "fuerza",
+            "hora": "07:00",
+            "duracion_min": 60,
+            "objetivo": "Fuerza tren superior + bisagra (reintroducción)",
+            "rutina_ref": "RT1"
+          }
+        ]
+      },
+      {
+        "fecha": "2026-10-01",
+        "dia": "jueves",
+        "sesiones": []
+      },
+      {
+        "fecha": "2026-10-02",
+        "dia": "viernes",
+        "sesiones": [
+          {
+            "tipo": "fuerza",
+            "hora": "07:00",
+            "duracion_min": 60,
+            "objetivo": "Fuerza tren superior + bisagra (reintroducción)",
+            "rutina_ref": "RT1"
+          }
+        ]
+      },
+      {
+        "fecha": "2026-10-03",
+        "dia": "sabado",
+        "sesiones": [
+          {
+            "tipo": "carrera_exterior",
+            "hora": "10:00",
+            "duracion_min": 45,
+            "objetivo": "Base aeróbica Z2",
+            "bloques_cardio": [
+              {
+                "nombre": "Calentamiento",
+                "duracion_min": 8,
+                "intensidad": {
+                  "zona": "Z1",
+                  "velocidad_kmh": 6.0,
+                  "inclinacion_pct": 1
+                }
+              },
+              {
+                "nombre": "Trabajo Z2",
+                "duracion_min": 32,
+                "intensidad": {
+                  "zona": "Z2",
+                  "velocidad_kmh": 7.5,
+                  "inclinacion_pct": 4
+                }
+              },
+              {
+                "nombre": "Vuelta a la calma",
+                "duracion_min": 5,
+                "intensidad": {
+                  "zona": "Z1",
+                  "rpe": 2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "fecha": "2026-10-04",
+        "dia": "domingo",
+        "sesiones": []
+      }
+    ],
+    "rutinas": [
+      {
+        "id": "RT1",
+        "hevy_routine_id": null,
+        "titulo": "B1S1 · Superior + bisagra",
+        "ejercicios": [
+          {
+            "exercise_template_id": "HEVY_BENCH_BB",
+            "nombre": "Bench Press (Barbell)",
+            "superset_id": null,
+            "descanso_s": 150,
+            "series": [
+              {
+                "tipo": "warmup",
+                "peso_kg": 30,
+                "reps": 10
+              },
+              {
+                "tipo": "normal",
+                "peso_kg": 50,
+                "reps_rango": [
+                  8,
+                  12
+                ],
+                "rpe_objetivo": 7
+              },
+              {
+                "tipo": "normal",
+                "peso_kg": 50,
+                "reps_rango": [
+                  8,
+                  12
+                ],
+                "rpe_objetivo": 7
+              },
+              {
+                "tipo": "normal",
+                "peso_kg": 50,
+                "reps_rango": [
+                  8,
+                  12
+                ],
+                "rpe_objetivo": 7
+              }
+            ]
+          },
+          {
+            "exercise_template_id": "HEVY_RDL_BB",
+            "nombre": "Romanian Deadlift (Barbell)",
+            "superset_id": null,
+            "descanso_s": 150,
+            "series": [
+              {
+                "tipo": "normal",
+                "peso_kg": 65,
+                "reps_rango": [
+                  10,
+                  12
+                ],
+                "rpe_objetivo": 7
+              },
+              {
+                "tipo": "normal",
+                "peso_kg": 65,
+                "reps_rango": [
+                  10,
+                  12
+                ],
+                "rpe_objetivo": 7
+              },
+              {
+                "tipo": "normal",
+                "peso_kg": 65,
+                "reps_rango": [
+                  10,
+                  12
+                ],
+                "rpe_objetivo": 7
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "nutricion": {
+    "objetivos_dia": {
+      "entreno": {
+        "kcal": 2050,
+        "proteina_g": 150,
+        "carbohidratos_g": 210,
+        "grasa_g": 60
+      },
+      "descanso": {
+        "kcal": 1850,
+        "proteina_g": 150,
+        "carbohidratos_g": 160,
+        "grasa_g": 60
+      }
+    },
+    "dias": [
+      {
+        "fecha": "2026-09-28",
+        "tipo_dia": "entreno",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-09-29",
+        "tipo_dia": "entreno",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-09-30",
+        "tipo_dia": "entreno",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-10-01",
+        "tipo_dia": "descanso",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-10-02",
+        "tipo_dia": "entreno",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-10-03",
+        "tipo_dia": "entreno",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      },
+      {
+        "fecha": "2026-10-04",
+        "tipo_dia": "descanso",
+        "comidas": [
+          {
+            "comida": "desayuno",
+            "hora": "08:30",
+            "items": [
+              {
+                "receta_id": "R1",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 600,
+                  "proteina_g": 45,
+                  "carbohidratos_g": 65,
+                  "grasa_g": 17
+                }
+              }
+            ]
+          },
+          {
+            "comida": "almuerzo",
+            "hora": "14:00",
+            "items": [
+              {
+                "receta_id": "R2",
+                "raciones": 1,
+                "macros": {
+                  "kcal": 750,
+                  "proteina_g": 55,
+                  "carbohidratos_g": 75,
+                  "grasa_g": 24
+                }
+              }
+            ]
+          },
+          {
+            "comida": "cena",
+            "hora": "21:00",
+            "items": [
+              {
+                "alimento": "yogur griego natural 0%",
+                "gramos": 250,
+                "raciones": 1,
+                "macros": {
+                  "kcal": 150,
+                  "proteina_g": 25,
+                  "carbohidratos_g": 10,
+                  "grasa_g": 0
+                }
+              }
+            ]
+          }
+        ],
+        "totales": {
+          "kcal": 1500,
+          "proteina_g": 125,
+          "carbohidratos_g": 150,
+          "grasa_g": 41
+        }
+      }
+    ],
+    "recetas": [
+      {
+        "id": "R1",
+        "nombre": "Avena con claras y fruta",
+        "raciones": 1,
+        "tiempo_min": 10,
+        "batch": false,
+        "ingredientes": [
+          {
+            "alimento": "copos de avena",
+            "gramos": 70
+          },
+          {
+            "alimento": "claras de huevo",
+            "gramos": 250
+          },
+          {
+            "alimento": "plátano",
+            "gramos": 120
+          }
+        ],
+        "pasos": [
+          "Cocer la avena con las claras",
+          "Añadir el plátano"
+        ],
+        "macros_racion": {
+          "kcal": 600,
+          "proteina_g": 45,
+          "carbohidratos_g": 65,
+          "grasa_g": 17,
+          "fibra_g": 8
+        },
+        "alergenos": [
+          "gluten",
+          "huevo"
+        ]
+      },
+      {
+        "id": "R2",
+        "nombre": "Pollo al horno con arroz y verduras",
+        "raciones": 4,
+        "tiempo_min": 30,
+        "batch": true,
+        "conservacion": "4 días en nevera",
+        "ingredientes": [
+          {
+            "alimento": "pechuga de pollo",
+            "gramos": 800
+          },
+          {
+            "alimento": "arroz",
+            "gramos": 320
+          },
+          {
+            "alimento": "verduras variadas",
+            "gramos": 800
+          },
+          {
+            "alimento": "aceite de oliva virgen extra",
+            "gramos": 40
+          }
+        ],
+        "pasos": [
+          "Hornear pollo y verduras 25 min a 200 °C",
+          "Cocer el arroz"
+        ],
+        "macros_racion": {
+          "kcal": 750,
+          "proteina_g": 55,
+          "carbohidratos_g": 75,
+          "grasa_g": 24,
+          "fibra_g": 6
+        },
+        "alergenos": []
+      }
+    ],
+    "lista_compra": [
+      {
+        "alimento": "pechuga de pollo",
+        "cantidad": 1.6,
+        "unidad": "kg",
+        "seccion": "carne"
+      },
+      {
+        "alimento": "copos de avena",
+        "cantidad": 500,
+        "unidad": "g",
+        "seccion": "despensa"
+      }
+    ],
+    "alimentos_evitar": [
+      {
+        "alimento_o_grupo": "grasas saturadas",
+        "nivel": "limitar",
+        "motivo": "LDL elevado",
+        "restriccion_id": "RD1"
+      }
+    ],
+    "hidratacion": "3 L/día; +500 ml por hora de entreno"
+  },
+  "autochequeo": {
+    "restricciones_respetadas": true,
+    "objetivos_cumplidos": false,
+    "desviaciones": [
+      "Ejemplo estructural: kcal por debajo del objetivo a propósito para probar V7"
+    ]
+  }
+}

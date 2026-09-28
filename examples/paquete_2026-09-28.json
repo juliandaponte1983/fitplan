@@ -1,0 +1,315 @@
+{
+  "schema": "paquete_semanal/v1",
+  "paquete_id": "3f6c2a9e-7b1d-4c55-9a0e-1d2b3c4d5e6f",
+  "generado": "2026-09-28T08:00:00+02:00",
+  "semana": {
+    "inicio": "2026-09-28",
+    "fin": "2026-10-04",
+    "bloque": 1,
+    "semana_en_bloque": 1,
+    "fase": "reintroduccion"
+  },
+  "perfil": {
+    "sexo": "H",
+    "edad": 43,
+    "altura_cm": 169,
+    "objetivo": {
+      "principal": "recomposicion",
+      "secundarios": [
+        "mejorar ritmo en carrera"
+      ],
+      "notas": "Ejemplo: confirmar objetivo real en el onboarding"
+    },
+    "nivel": "intermedio",
+    "disponibilidad": [
+      {
+        "dia": "lunes",
+        "desde": "06:45",
+        "hasta": "08:15",
+        "lugar": "gimnasio"
+      },
+      {
+        "dia": "martes",
+        "desde": "06:45",
+        "hasta": "08:15",
+        "lugar": "gimnasio"
+      },
+      {
+        "dia": "miercoles",
+        "desde": "06:45",
+        "hasta": "08:15",
+        "lugar": "gimnasio"
+      },
+      {
+        "dia": "jueves",
+        "desde": "06:45",
+        "hasta": "08:15",
+        "lugar": "gimnasio"
+      },
+      {
+        "dia": "viernes",
+        "desde": "06:45",
+        "hasta": "08:15",
+        "lugar": "gimnasio"
+      },
+      {
+        "dia": "sabado",
+        "desde": "09:30",
+        "hasta": "11:30",
+        "lugar": "exterior"
+      }
+    ],
+    "material": [
+      "barra",
+      "mancuernas",
+      "poleas",
+      "prensa",
+      "cinta",
+      "remo",
+      "bici_indoor"
+    ],
+    "preferencias_alimentarias": {
+      "tipo_dieta": "omnivora",
+      "no_le_gusta": [],
+      "le_gusta": [],
+      "cocina": "mediterránea",
+      "tiempo_cocina_max_min": 30,
+      "batch_cooking": true,
+      "comidas_fuera": []
+    },
+    "horario_comidas": [
+      {
+        "comida": "pre_entreno",
+        "hora": "06:30"
+      },
+      {
+        "comida": "desayuno",
+        "hora": "08:30"
+      },
+      {
+        "comida": "almuerzo",
+        "hora": "14:00"
+      },
+      {
+        "comida": "merienda",
+        "hora": "17:30"
+      },
+      {
+        "comida": "cena",
+        "hora": "21:00"
+      }
+    ]
+  },
+  "restricciones": {
+    "ejercicio": [],
+    "dieta": [
+      {
+        "id": "RD1",
+        "nivel": "limitar",
+        "alimento_o_grupo": "grasas saturadas",
+        "limite": "< 10 % kcal"
+      }
+    ],
+    "limites": {
+      "usar_rpe_en_lugar_de_fc": false
+    },
+    "senales_alarma": [
+      "Dolor u opresión en el pecho"
+    ],
+    "requiere_valoracion_medica": false
+  },
+  "estado": {
+    "composicion_actual": {
+      "fecha": "2026-09-22",
+      "peso_kg": 84.2,
+      "grasa_pct": 30.0,
+      "musculo_esqueletico_kg": 33.3,
+      "masa_magra_kg": 58.9,
+      "tmb_kcal": 1642
+    },
+    "tendencia_4s": {
+      "peso_kg_sem": null,
+      "grasa_pct_sem": null,
+      "musculo_esqueletico_kg_sem": null,
+      "n_mediciones": 1
+    },
+    "recuperacion": null,
+    "cardio_referencia": {
+      "fc_max_estimada": 177,
+      "zonas_fc": {
+        "Z1": [
+          89,
+          106
+        ],
+        "Z2": [
+          106,
+          124
+        ],
+        "Z3": [
+          124,
+          142
+        ],
+        "Z4": [
+          142,
+          159
+        ],
+        "Z5": [
+          159,
+          177
+        ]
+      },
+      "ritmo_z2_cinta_min_km": null,
+      "ritmo_z2_exterior_min_km": null
+    }
+  },
+  "semana_anterior": {
+    "sesiones_planificadas": 0,
+    "sesiones_realizadas": 2,
+    "adherencia_nutricion_pct": null,
+    "carga": {
+      "trimp_semana": null,
+      "acwr": null,
+      "volumen_fuerza_kg": null,
+      "minutos_cardio": 30,
+      "minutos_por_zona": {}
+    },
+    "sesiones": [
+      {
+        "fecha": "2026-09-23",
+        "tipo": "carrera_exterior",
+        "duracion_min": 30,
+        "fc_media": 148,
+        "distancia_km": 4.78,
+        "rpe": null
+      },
+      {
+        "fecha": "2026-09-25",
+        "tipo": "fuerza",
+        "duracion_min": 57,
+        "fc_media": 117,
+        "distancia_km": null,
+        "rpe": null
+      }
+    ],
+    "comentarios_usuario": ""
+  },
+  "objetivos": {
+    "entreno": {
+      "sesiones_fuerza": 3,
+      "sesiones_cardio": 2,
+      "min_z2_semana": 90,
+      "min_alta_intensidad_max": 0,
+      "dias_descanso_min": 2,
+      "series_semana_por_grupo": {
+        "pecho": 9,
+        "espalda": 12,
+        "pierna": 12
+      },
+      "incremento_carga_max_pct": 5,
+      "progresiones": [
+        {
+          "exercise_template_id": "HEVY_BENCH_BB",
+          "nombre": "Bench Press (Barbell)",
+          "series": 3,
+          "reps_min": 8,
+          "reps_max": 12,
+          "peso_kg": 50,
+          "rpe_objetivo": 7,
+          "motivo": "mantener",
+          "historial": "50×10 estable desde 1T 2026; semana de reintroducción"
+        },
+        {
+          "exercise_template_id": "HEVY_RDL_BB",
+          "nombre": "Romanian Deadlift (Barbell)",
+          "series": 3,
+          "reps_min": 10,
+          "reps_max": 12,
+          "peso_kg": 65,
+          "rpe_objetivo": 7,
+          "motivo": "descarga",
+          "historial": "70×12; -7 % por reintroducción"
+        }
+      ]
+    },
+    "nutricion": {
+      "kcal_entreno": 2050,
+      "kcal_descanso": 1850,
+      "proteina_g": 150,
+      "grasa_g_min": 60,
+      "carbohidratos_g_entreno": 210,
+      "carbohidratos_g_descanso": 160,
+      "fibra_g_min": 30,
+      "agua_ml": 3000,
+      "tolerancia_kcal_pct": 5,
+      "base_calculo": "TMB 1642 (Katch-McArdle, masa magra 58.9 kg) × 1,45 = 2380; déficit ≈ 14–22 % según el día. Sin tendencia aún (1 medición)."
+    }
+  },
+  "catalogo_ejercicios": [
+    {
+      "exercise_template_id": "HEVY_BENCH_BB",
+      "nombre": "Bench Press (Barbell)",
+      "grupo": "pecho",
+      "patrones": [
+        "empuje_horizontal"
+      ],
+      "material": "barra"
+    },
+    {
+      "exercise_template_id": "HEVY_SQUAT_BB",
+      "nombre": "Squat (Barbell)",
+      "grupo": "pierna",
+      "patrones": [
+        "carga_axial",
+        "rodilla_flexion_profunda"
+      ],
+      "material": "barra"
+    },
+    {
+      "exercise_template_id": "HEVY_RDL_BB",
+      "nombre": "Romanian Deadlift (Barbell)",
+      "grupo": "pierna",
+      "patrones": [
+        "bisagra_cadera"
+      ],
+      "material": "barra"
+    },
+    {
+      "exercise_template_id": "HEVY_ROW_DB",
+      "nombre": "Bent Over Row (Dumbbell)",
+      "grupo": "espalda",
+      "patrones": [
+        "traccion_horizontal"
+      ],
+      "material": "mancuernas"
+    },
+    {
+      "exercise_template_id": "HEVY_PULLUP",
+      "nombre": "Pull Up",
+      "grupo": "espalda",
+      "patrones": [
+        "traccion_vertical",
+        "agarre"
+      ],
+      "material": "peso_corporal"
+    },
+    {
+      "exercise_template_id": "HEVY_LATPD_CG",
+      "nombre": "Lat Pulldown - Close Grip (Cable)",
+      "grupo": "espalda",
+      "patrones": [
+        "traccion_vertical"
+      ],
+      "material": "polea"
+    }
+  ],
+  "rutinas_hevy_actuales": [
+    {
+      "routine_id": "hevy-rt-1",
+      "titulo": "L/M Pecho y tríceps",
+      "ejercicios": [
+        "Bench Press (Barbell)"
+      ]
+    }
+  ],
+  "instrucciones_extra": ""
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fitplan/perfil_medico/v1",
+  "title": "Perfil médico (bloque YAML del .md devuelto por el LLM externo)",
+  "type": "object",
+  "required": ["schema", "generado", "fuentes", "condiciones", "medicacion", "alergias_intolerancias",
+               "restricciones_ejercicio", "restricciones_dieta", "limites", "senales_alarma",
+               "requiere_valoracion_medica", "confianza", "datos_faltantes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "perfil_medico/v1" },
+    "generado": { "type": "string", "format": "date" },
+    "fuentes": {
+      "description": "Documentos analizados. Cada hallazgo referencia uno por su id.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "tipo", "fecha"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^D[0-9]+$" },
+          "tipo": { "type": "string", "description": "informe_alta | analitica | ecg | prueba_esfuerzo | informe_especialista | receta | otro" },
+          "fecha": { "type": ["string", "null"], "format": "date" },
+          "descripcion": { "type": "string" }
+        }
+      }
+    },
+    "condiciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nombre", "estado", "fuente", "impacto_ejercicio", "impacto_dieta"],
+        "additionalProperties": false,
+        "properties": {
+          "nombre": { "type": "string" },
+          "cie10": { "type": ["string", "null"] },
+          "estado": { "enum": ["activa", "controlada", "resuelta", "sospecha"] },
+          "fecha_diagnostico": { "type": ["string", "null"] },
+          "fuente": { "$ref": "#/$defs/fuente" },
+          "impacto_ejercicio": { "enum": ["ninguno", "bajo", "medio", "alto"] },
+          "impacto_dieta": { "enum": ["ninguno", "bajo", "medio", "alto"] },
+          "notas": { "type": "string" }
+        }
+      }
+    },
+    "medicacion": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["principio_activo", "fuente"],
+        "additionalProperties": false,
+        "properties": {
+          "principio_activo": { "type": "string" },
+          "pauta": { "type": ["string", "null"] },
+          "efecto_ejercicio": { "type": ["string", "null"], "description": "p.ej. 'betabloqueante: FC atenuada, usar RPE en vez de zonas FC'" },
+          "efecto_dieta": { "type": ["string", "null"], "description": "p.ej. 'evitar pomelo', 'tomar con comida'" },
+          "fuente": { "$ref": "#/$defs/fuente" }
+        }
+      }
+    },
+    "alergias_intolerancias": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sustancia", "tipo", "gravedad", "fuente"],
+        "additionalProperties": false,
+        "properties": {
+          "sustancia": { "type": "string" },
+          "tipo": { "enum": ["alergia", "intolerancia"] },
+          "gravedad": { "enum": ["leve", "moderada", "grave", "anafilaxia", "desconocida"] },
+          "fuente": { "$ref": "#/$defs/fuente" }
+        }
+      }
+    },
+    "analitica": {
+      "description": "Solo parámetros relevantes para entreno/dieta (glucosa, HbA1c, lípidos, función renal/hepática, ferritina, vit D, TSH, ácido úrico, tensión arterial...).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["parametro", "valor", "unidad", "fecha", "estado", "fuente"],
+        "additionalProperties": false,
+        "properties": {
+          "parametro": { "type": "string" },
+          "valor": { "type": ["number", "string"] },
+          "unidad": { "type": "string" },
+          "rango_referencia": { "type": ["string", "null"] },
+          "fecha": { "type": ["string", "null"], "format": "date" },
+          "estado": { "enum": ["normal", "bajo", "alto", "limite"] },
+          "fuente": { "$ref": "#/$defs/fuente" }
+        }
+      }
+    },
+    "restricciones_ejercicio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "nivel", "ambito", "descripcion", "motivo", "fuente"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^RE[0-9]+$" },
+          "nivel": { "enum": ["prohibido", "limitar", "precaucion"] },
+          "ambito": {
+            "type": "array",
+            "description": "Patrones o actividades afectadas. Vocabulario controlado para que la app pueda validar.",
+            "items": { "enum": ["carga_axial", "flexion_columna_cargada", "rotacion_columna_cargada", "overhead", "impacto", "carrera", "saltos",
+                                "valsalva", "isometrico_intenso", "alta_intensidad_cardio", "hiit", "rodilla_flexion_profunda", "hombro_rotacion_externa",
+                                "agarre", "inversion_cabeza_abajo", "calor", "ayuno_entreno", "otro"] }
+          },
+          "descripcion": { "type": "string" },
+          "limite": { "type": ["string", "null"], "description": "p.ej. 'máx. RPE 7', 'máx. 20 min continuos'" },
+          "motivo": { "type": "string" },
+          "fuente": { "$ref": "#/$defs/fuente" }
+        }
+      }
+    },
+    "restricciones_dieta": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "nivel", "alimento_o_grupo", "motivo", "fuente"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^RD[0-9]+$" },
+          "nivel": { "enum": ["prohibido", "limitar", "precaucion"] },
+          "alimento_o_grupo": { "type": "string", "description": "Nombre en minúsculas: 'gluten', 'marisco', 'sal', 'azúcares añadidos', 'pomelo'..." },
+          "limite": { "type": ["string", "null"], "description": "p.ej. 'sodio < 2 g/día'" },
+          "motivo": { "type": "string" },
+          "fuente": { "$ref": "#/$defs/fuente" }
+        }
+      }
+    },
+    "limites": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fc_max_segura_ppm": { "type": ["integer", "null"] },
+        "usar_rpe_en_lugar_de_fc": { "type": "boolean" },
+        "rpe_max": { "type": ["number", "null"], "minimum": 1, "maximum": 10 },
+        "tension_arterial_objetivo": { "type": ["string", "null"] },
+        "kcal_min_diarias": { "type": ["integer", "null"] },
+        "proteina_max_g_kg": { "type": ["number", "null"] },
+        "sodio_max_mg": { "type": ["integer", "null"] },
+        "otros": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "senales_alarma": {
+      "description": "Síntomas ante los que se debe parar la actividad y consultar al médico.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requiere_valoracion_medica": {
+      "type": "object",
+      "required": ["valor", "motivo"],
+      "additionalProperties": false,
+      "properties": {
+        "valor": { "type": "boolean" },
+        "motivo": { "type": ["string", "null"] }
+      }
+    },
+    "confianza": { "enum": ["alta", "media", "baja"] },
+    "datos_faltantes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "fuente": {
+      "type": "string",
+      "description": "id del documento (D1, D2...) o 'declarado_usuario'",
+      "pattern": "^(D[0-9]+|declarado_usuario)$"
+    }
+  }
+}

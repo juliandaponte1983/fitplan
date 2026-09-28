@@ -1,0 +1,23 @@
+{
+  "schema": "composicion_corporal/v1",
+  "fuente": "fitdays",
+  "fecha_hora": "2026-09-22T07:22:49",
+  "perfil": { "sexo": "H", "edad": 43, "altura_cm": 169 },
+  "composicion": {
+    "peso_kg": 84.2, "grasa_kg": 25.3, "grasa_pct": 30.0,
+    "masa_muscular_kg": 55.0, "musculo_esqueletico_kg": 33.3,
+    "masa_osea_kg": 3.9, "proteina_kg": 11.8, "agua_kg": 43.2,
+    "masa_magra_kg": 58.9, "grasa_subcutanea_pct": 21.4,
+    "grasa_visceral": 10, "imc": 29.5, "tmb_kcal": 1642,
+    "asmi": 9.1, "whr": 0.93, "edad_corporal": 46, "puntuacion": 70
+  },
+  "segmentario": {
+    "grasa_kg":   { "brazo_izq": 1.6, "brazo_der": 1.6, "tronco": 13.2, "pierna_izq": 3.8, "pierna_der": 3.7 },
+    "musculo_kg": { "brazo_izq": 3.4, "brazo_der": 3.4, "tronco": 25.6, "pierna_izq": 9.6, "pierna_der": 9.6 }
+  },
+  "impedancia_ohm": {
+    "20kHz":  { "brazo_izq": 287.0, "brazo_der": 267.0, "tronco": 21.6, "pierna_izq": 293.5, "pierna_der": 284.5 },
+    "100kHz": { "brazo_izq": 251.0, "brazo_der": 231.0, "tronco": 19.4, "pierna_izq": 253.0, "pierna_der": 243.0 }
+  },
+  "extraccion": { "metodo": "llm_vision", "campos_dudosos": [], "incoherencias": [] }
+}

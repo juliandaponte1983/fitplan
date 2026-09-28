@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fitplan/composicion_corporal/v1",
+  "title": "Medición de composición corporal (informe Fitdays u otra báscula de bioimpedancia)",
+  "type": "object",
+  "required": ["schema", "fuente", "fecha_hora", "perfil", "composicion"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "composicion_corporal/v1" },
+    "fuente": { "type": "string", "description": "fitdays | manual | otra" },
+    "fecha_hora": { "type": "string", "format": "date-time", "description": "Hora local, sin zona: AAAA-MM-DDTHH:MM:SS" },
+    "perfil": {
+      "type": "object",
+      "required": ["sexo", "edad", "altura_cm"],
+      "additionalProperties": false,
+      "properties": {
+        "sexo": { "enum": ["H", "M"] },
+        "edad": { "type": "integer", "minimum": 10, "maximum": 110 },
+        "altura_cm": { "type": "number", "minimum": 100, "maximum": 230 }
+      }
+    },
+    "composicion": {
+      "type": "object",
+      "required": ["peso_kg"],
+      "additionalProperties": false,
+      "properties": {
+        "peso_kg":               { "type": "number", "minimum": 20, "maximum": 300 },
+        "grasa_kg":              { "type": ["number", "null"] },
+        "grasa_pct":             { "type": ["number", "null"], "minimum": 2, "maximum": 70 },
+        "masa_muscular_kg":      { "type": ["number", "null"] },
+        "musculo_esqueletico_kg":{ "type": ["number", "null"] },
+        "masa_osea_kg":          { "type": ["number", "null"] },
+        "proteina_kg":           { "type": ["number", "null"] },
+        "agua_kg":               { "type": ["number", "null"] },
+        "masa_magra_kg":         { "type": ["number", "null"] },
+        "grasa_subcutanea_pct":  { "type": ["number", "null"] },
+        "grasa_visceral":        { "type": ["number", "null"], "description": "Índice de la báscula (adimensional)" },
+        "imc":                   { "type": ["number", "null"] },
+        "tmb_kcal":              { "type": ["number", "null"] },
+        "asmi":                  { "type": ["number", "null"], "description": "kg/m²" },
+        "whr":                   { "type": ["number", "null"] },
+        "edad_corporal":         { "type": ["integer", "null"] },
+        "puntuacion":            { "type": ["number", "null"] }
+      }
+    },
+    "segmentario": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "grasa_kg":   { "$ref": "#/$defs/segmentos" },
+        "musculo_kg": { "$ref": "#/$defs/segmentos" }
+      }
+    },
+    "impedancia_ohm": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "20kHz":  { "$ref": "#/$defs/segmentos_imp" },
+        "100kHz": { "$ref": "#/$defs/segmentos_imp" }
+      }
+    },
+    "extraccion": {
+      "type": "object",
+      "description": "Metadatos de la extracción desde imagen",
+      "additionalProperties": false,
+      "properties": {
+        "metodo": { "enum": ["llm_vision", "ocr", "manual", "csv", "pdf"] },
+        "campos_dudosos": { "type": "array", "items": { "type": "string" } },
+        "incoherencias": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "segmentos": {
+      "type": "object",
+      "required": ["brazo_izq", "brazo_der", "tronco", "pierna_izq", "pierna_der"],
+      "additionalProperties": false,
+      "properties": {
+        "brazo_izq":  { "type": ["number", "null"] },
+        "brazo_der":  { "type": ["number", "null"] },
+        "tronco":     { "type": ["number", "null"] },
+        "pierna_izq": { "type": ["number", "null"] },
+        "pierna_der": { "type": ["number", "null"] }
+      }
+    },
+    "segmentos_imp": { "$ref": "#/$defs/segmentos" }
+  }
+}
