@@ -71,7 +71,7 @@ Si hay algún bloqueo, la app genera el **paquete de corrección** con la lista 
 
 ## Decisiones tomadas
 
-- Stack: FastAPI + SQLite (SQLCipher) + frontend web; multiperfil con MFA.
+- Stack: FastAPI + SQLite + frontend web; multiperfil con MFA. BD en `~/Library/Application Support/FitPlan/` (fuera de OneDrive). Cifrado de campos sensibles (perfil médico, claves de API) con Fernet; clave maestra en el Llavero de macOS. SQLCipher descartado por problemas de compilación con Python 3.14.
 - LLM: paquetes manuales (la API queda preparada para más adelante).
 - Fuentes: Hevy (fuerza) · Garmin FIT (FC, carga, cardio) · Fitdays (composición).
 - Hevy Pro: la app sube las rutinas por API; el CSV queda como alternativa.

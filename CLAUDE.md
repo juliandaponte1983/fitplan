@@ -11,7 +11,7 @@ Lee `README.md` para la arquitectura, el flujo de datos y las reglas del validad
 
 ## Stack
 - Python 3.14, entorno en `~/.venvs/fitplan` (fuera de OneDrive, no crear `.venv` dentro del repo).
-- Backend FastAPI + SQLite (SQLCipher). Frontend web propio. Lectores: `fitdecode` (FIT), CSV de Hevy (fechas en español: "25 sept 2026, 7:04"), API de Hevy Pro.
+- Backend FastAPI + SQLite (BD fuera del repo, en ~/Library/Application Support/FitPlan; campos sensibles cifrados con Fernet, clave en el Llavero). CLI: `python -m app.cli`. Frontend web propio. Lectores: `fitdecode` (FIT), CSV de Hevy (fechas en español: "25 sept 2026, 7:04"), API de Hevy Pro.
 
 ## Convenciones
 - Código e identificadores en español cuando describen el dominio (`perfil`, `sesion`, `receta`); inglés para lo técnico estándar.
