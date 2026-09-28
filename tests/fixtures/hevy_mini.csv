@@ -1,0 +1,8 @@
+"title","start_time","end_time","description","exercise_title","superset_id","exercise_notes","set_index","set_type","weight_kg","reps","distance_km","duration_seconds","rpe"
+"Pecho","2 sept 2026, 7:10","2 sept 2026, 8:05","","Bench Press (Barbell)",,"",0,"warmup",30,10,,,
+"Pecho","2 sept 2026, 7:10","2 sept 2026, 8:05","","Bench Press (Barbell)",,"",1,"normal",50,10,,,8
+"Pecho","2 sept 2026, 7:10","2 sept 2026, 8:05","","Plank",,"",0,"normal",,,,60,
+"Pecho","2 sept 2026, 7:10","2 sept 2026, 8:05","","Bench Press (Barbell)",,"",0,"normal",45,12,,,
+"Espalda","25 Sep 2026, 07:04","25 Sep 2026, 08:01","","Pull Up",1,"",0,"normal",,10,,,
+"Espalda","25 Sep 2026, 07:04","25 Sep 2026, 08:01","","Pull Up",1,"",1,"normal",,9,,,
+"Roto","32 foo 2026, 7:00","32 foo 2026, 8:00","","Squat (Barbell)",,"",0,"normal",50,10,,,
