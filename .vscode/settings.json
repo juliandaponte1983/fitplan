@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "${userHome}/.venvs/fitplan/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "files.exclude": { "**/__pycache__": true, "**/.DS_Store": true },
+  "files.insertFinalNewline": true
+}
