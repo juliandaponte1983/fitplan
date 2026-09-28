@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app import config
 
-MIGRACIONES = [Path(__file__).with_name("esquema.sql")]  # índice = versión - 1
+MIGRACIONES = [Path(__file__).with_name(n) for n in ("esquema.sql", "migracion_002.sql")]  # índice = versión - 1
 
 
 def conectar(ruta: Path | str | None = None) -> sqlite3.Connection:

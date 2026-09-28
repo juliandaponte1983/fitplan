@@ -3,14 +3,19 @@
   python -m app.cli perfil-nuevo julian --sexo H --nacimiento 1983-01-01 --altura 169
   python -m app.cli importar julian ../datos/julian
   python -m app.cli resumen julian
+  python -m app.cli ajustes julian --objetivo perder_grasa --fc-reposo 58
+  python -m app.cli analisis julian [--semana 2026-09-28] [--json]
 """
 from __future__ import annotations
 
 import argparse
+import json
+from datetime import date
 
 from app import config
 from app.db.conexion import conectar
 from app import ingesta
+from app.engine import analisis as motor
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -26,6 +31,17 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("carpeta")
     p = sub.add_parser("resumen")
     p.add_argument("alias")
+    p = sub.add_parser("ajustes")
+    p.add_argument("alias")
+    p.add_argument("--objetivo", choices=["perder_grasa", "recomposicion", "ganar_musculo", "rendimiento", "salud_general"])
+    p.add_argument("--nivel", choices=["principiante", "intermedio", "avanzado"])
+    p.add_argument("--fc-reposo", type=int)
+    p.add_argument("--fc-max", type=int)
+    p.add_argument("--factor-neat", type=float, help="1.2 sedentario · 1.35 oficina con algo de movimiento · 1.5 activo")
+    p = sub.add_parser("analisis")
+    p.add_argument("alias")
+    p.add_argument("--semana", help="lunes de la semana a planificar (AAAA-MM-DD)")
+    p.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
 
     conn = conectar()
@@ -52,6 +68,42 @@ def main(argv: list[str] | None = None) -> None:
         print("Garmin:   " + (", ".join(f"{r['tipo']} {r['n']}" for r in ac) or "sin actividades"))
         print(f"Fitdays:  {co[0]} mediciones" + (f", última {co[1]} ({co[2]} kg)" if co[0] else ""))
         print(f"Médico:   {'perfil generado ' + str(pm.get('generado')) if pm else 'sin perfil médico'}")
+
+    elif a.cmd == "ajustes":
+        pid = ingesta.perfil_id(conn, a.alias)
+        aj = motor.guardar_ajustes(conn, pid, objetivo=a.objetivo, nivel=a.nivel, fc_reposo=a.fc_reposo,
+                                   fc_max=a.fc_max, factor_neat=a.factor_neat)
+        print(json.dumps(aj, ensure_ascii=False))
+    elif a.cmd == "analisis":
+        pid = ingesta.perfil_id(conn, a.alias)
+        r = motor.analizar(conn, pid, date.fromisoformat(a.semana) if a.semana else None)
+        print(json.dumps(r, ensure_ascii=False, indent=2, default=str) if a.json else _informe(r))
+
+
+def _informe(r: dict) -> str:
+    s, e, sa, n = r["semana"], r["estado"], r["semana_anterior"], r["nutricion"]
+    c, t = e["composicion_actual"] or {}, e["tendencia_4s"]
+    L = [f"══ Semana {s['inicio']} → {s['fin']} · fase sugerida: {s['fase_sugerida'].upper()}",
+         f"   Días sin entrenar: {s['dias_sin_entrenar']} · parón ≥14 d en las últimas semanas: {'sí' if s['parada_reciente_14d'] else 'no'}",
+         f"── Composición: {c.get('peso_kg')} kg · grasa {c.get('grasa_pct')} % · tendencia peso "
+         f"{t['peso_kg_sem'] if t['peso_kg_sem'] is not None else 'n/d (faltan mediciones)'} kg/sem",
+         f"── Semana anterior: {sa['sesiones_realizadas']} sesiones ({sa['sesiones_fuerza']} de fuerza) · "
+         f"TRIMP {sa['carga']['trimp_semana']} · ACWR {sa['carga']['acwr']} · volumen fuerza {sa['carga']['volumen_fuerza_kg']:.0f} kg",
+         f"   Min por zona: {sa['carga']['minutos_por_zona']}",
+         f"── FC máx {e['cardio_referencia']['fc_max_estimada']} · Z2 {e['cardio_referencia']['zonas_fc']['Z2']} ppm",
+         *[f"⚠  {x}" for x in r["alertas"]],
+         "── Fuerza: prescripción para la semana"]
+    for p in r["fuerza"]["prescripciones"][:12]:
+        peso = f"{p['peso_kg']:g} kg" if p["peso_kg"] else "peso corporal"
+        L.append(f"   {p['ejercicio'][:34]:34} {p['series']}×{p['reps_min']}-{p['reps_max']} @ {peso:13} [{p['motivo']}]  ← {p['historial']}")
+    est = [x["ejercicio"] for x in r["fuerza"]["progresion"] if x["estancado"]]
+    if est:
+        L.append(f"   Estancados (4 sem sin progreso): {', '.join(est)}")
+    if n:
+        L += [f"── Nutrición: entreno {n['kcal_entreno']} kcal · descanso {n['kcal_descanso']} kcal · proteína {n['proteina_g']} g · "
+              f"grasa ≥{n['grasa_g_min']} g · HC {n['carbohidratos_g_entreno']}/{n['carbohidratos_g_descanso']} g · fibra ≥{n['fibra_g_min']} g · agua {n['agua_ml']} ml",
+              f"   {n['base_calculo']}"]
+    return "\n".join(L)
 
 
 if __name__ == "__main__":

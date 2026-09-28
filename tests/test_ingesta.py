@@ -28,7 +28,7 @@ def pid(conn):
 
 def test_migracion_idempotente(conn):
     from app.db.conexion import migrar
-    assert migrar(conn) == 1 and migrar(conn) == 1
+    assert migrar(conn) == 2 and migrar(conn) == 2
 
 
 def test_hevy_dedup_por_fichero_y_por_serie(conn, pid, tmp_path):
