@@ -5,17 +5,21 @@
   python -m app.cli resumen julian
   python -m app.cli ajustes julian --objetivo perder_grasa --fc-reposo 58
   python -m app.cli analisis julian [--semana 2026-09-28] [--json]
+  python -m app.cli perfil-cargar julian ../datos/julian/perfil.yaml
+  python -m app.cli paquete julian ../datos/julian [--semana 2026-09-28] [--nota "esta semana viajo el jueves"]
+  python -m app.cli plan-importar julian ../datos/julian respuesta_claude.md
 """
 from __future__ import annotations
 
 import argparse
 import json
-from datetime import date
+from datetime import date, timedelta
 
 from app import config
 from app.db.conexion import conectar
 from app import ingesta
 from app.engine import analisis as motor
+from app.packages import exportar, importar as importar_plan
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -42,6 +46,18 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("alias")
     p.add_argument("--semana", help="lunes de la semana a planificar (AAAA-MM-DD)")
     p.add_argument("--json", action="store_true")
+    p = sub.add_parser("perfil-cargar")
+    p.add_argument("alias")
+    p.add_argument("yaml")
+    p = sub.add_parser("paquete")
+    p.add_argument("alias")
+    p.add_argument("carpeta", help="carpeta de datos del perfil (datos/<perfil>)")
+    p.add_argument("--semana")
+    p.add_argument("--nota", default="")
+    p = sub.add_parser("plan-importar")
+    p.add_argument("alias")
+    p.add_argument("carpeta")
+    p.add_argument("respuesta", help="fichero con la respuesta de Claude (.md o .json)")
     a = ap.parse_args(argv)
 
     conn = conectar()
@@ -78,6 +94,32 @@ def main(argv: list[str] | None = None) -> None:
         pid = ingesta.perfil_id(conn, a.alias)
         r = motor.analizar(conn, pid, date.fromisoformat(a.semana) if a.semana else None)
         print(json.dumps(r, ensure_ascii=False, indent=2, default=str) if a.json else _informe(r))
+    elif a.cmd == "perfil-cargar":
+        pid = ingesta.perfil_id(conn, a.alias)
+        aj = exportar.cargar_perfil_yaml(conn, pid, a.yaml)
+        pp = aj["perfil_plan"]
+        print(f"Perfil de plan cargado: objetivo {pp['objetivo']['principal']}, {pp['sesiones_semana']}, "
+              f"{len(pp['disponibilidad'])} franjas, {len(pp['horario_comidas'])} comidas")
+    elif a.cmd == "paquete":
+        pid = ingesta.perfil_id(conn, a.alias)
+        semana = date.fromisoformat(a.semana) if a.semana else motor.lunes(date.today() + timedelta(days=7 if date.today().weekday() >= 5 else 0))
+        paq, avisos = exportar.construir(conn, pid, semana, a.nota)
+        ruta = exportar.guardar(conn, pid, paq, a.carpeta)
+        for x in avisos:
+            print("⚠ ", x)
+        o = paq["objetivos"]
+        print(f"Paquete {paq['paquete_id'][:8]} · semana {paq['semana']['inicio']} · fase {paq['semana']['fase']}")
+        print(f"  Entreno: {o['entreno']['sesiones_fuerza']} fuerza + {o['entreno']['sesiones_cardio']} cardio · Z2 ≥{o['entreno']['min_z2_semana']} min · "
+              f"{len(o['entreno']['progresiones'])} progresiones · {len(paq['catalogo_ejercicios'])} ejercicios en catálogo")
+        print(f"  Nutrición: {o['nutricion']['kcal_entreno']}/{o['nutricion']['kcal_descanso']} kcal · {o['nutricion']['proteina_g']} g proteína")
+        print(f"  → {ruta}  ({ruta.stat().st_size // 1024} KB)")
+    elif a.cmd == "plan-importar":
+        pid = ingesta.perfil_id(conn, a.alias)
+        r = importar_plan.importar(conn, pid, a.respuesta, a.carpeta)
+        print(f"Plan {r['estado'].upper()} · {r['bloqueos']} bloqueos · {r['avisos']} avisos")
+        for h in r["hallazgos"]:
+            print(f"  {'✘' if h['severidad'] == 'bloqueo' else '·'} [{h['regla']}] {h['mensaje']}")
+        print("  →", r.get("plan") or f"lleva a Claude el fichero de corrección: {r['correccion']}")
 
 
 def _informe(r: dict) -> str:
@@ -107,4 +149,9 @@ def _informe(r: dict) -> str:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    try:
+        main()
+    except (ValueError, LookupError, FileNotFoundError) as e:
+        print(f"✘ {e}", file=sys.stderr)
+        sys.exit(1)

@@ -1,0 +1,35 @@
+# Perfil de entrenamiento y alimentación — cópialo a datos/<perfil>/perfil.yaml y edítalo.
+# Se carga con:  python -m app.cli perfil-cargar <alias> ../datos/<perfil>/perfil.yaml
+objetivo:
+  principal: perder_grasa          # perder_grasa | recomposicion | ganar_musculo | rendimiento | salud_general
+  secundarios: [mejorar ritmo en carrera]
+  notas: ""
+nivel: intermedio                  # principiante | intermedio | avanzado
+sesiones_semana: { fuerza: 3, cardio: 2 }   # lo que quieres y puedes sostener
+disponibilidad:                    # franjas en las que puedes entrenar
+  - { dia: lunes,     desde: "06:45", hasta: "08:15", lugar: gimnasio }
+  - { dia: martes,    desde: "06:45", hasta: "08:15", lugar: gimnasio }
+  - { dia: miercoles, desde: "06:45", hasta: "08:15", lugar: gimnasio }
+  - { dia: jueves,    desde: "06:45", hasta: "08:15", lugar: gimnasio }
+  - { dia: viernes,   desde: "06:45", hasta: "08:15", lugar: gimnasio }
+  - { dia: sabado,    desde: "09:30", hasta: "11:30", lugar: exterior }
+material: [barra, mancuernas, poleas, maquinas, cinta, remo, bici_indoor]
+preferencias_alimentarias:
+  tipo_dieta: omnivora
+  cocina: mediterránea
+  le_gusta: []
+  no_le_gusta: []
+  tiempo_cocina_max_min: 30
+  batch_cooking: true
+  comidas_fuera: []                # p.ej. "almuerzo L-V en la oficina (tupper)"
+horario_comidas:
+  - { comida: pre_entreno, hora: "06:30" }
+  - { comida: desayuno,    hora: "08:30" }
+  - { comida: almuerzo,    hora: "14:00" }
+  - { comida: merienda,    hora: "17:30" }
+  - { comida: cena,        hora: "21:00" }
+restricciones_declaradas:          # lo que sabes aunque no esté en informes médicos
+  alimentos_prohibidos: []         # alergias / cosas que no tomas nunca
+  alimentos_limitar: []
+  ejercicio_evitar: []             # vocabulario de ámbitos: carga_axial, impacto, overhead, ...
+  molestias_actuales: ""

@@ -32,6 +32,7 @@ Actúa como entrenador personal certificado (fuerza y resistencia) y dietista-nu
   - Prioriza Z2 (cinta con inclinación, remo, bici).
   - Si hay que usar impacto, pon la carrera en exterior en días que no sean de pierna pesada.
   - Especifica cada bloque con zona o RPE, más velocidad e inclinación en cinta, ritmo en exterior o vatios en remo y bici.
+- **Z2 en días de fuerza:** puedes sumar minutos de Z2 añadiendo a la sesión de fuerza un bloque final de 10–15 min (cinta inclinada, remo o bici), con su `bloques_cardio`, siempre dentro de la franja disponible.
 - **Distribución:** evita pierna pesada y carrera intensa en días consecutivos. Pon los días de descanso después de las sesiones más exigentes.
 - **Alimentación:**
   - Cocina de `preferencias_alimentarias.cocina`, con ingredientes de supermercado español.
