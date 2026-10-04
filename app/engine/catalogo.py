@@ -38,7 +38,7 @@ MATERIAL = [("(barbell)", "barra"), ("(dumbbell)", "mancuernas"), ("(machine)", 
             ("machine", "maquina"), ("cable", "polea"), ("pulldown", "polea")]
 
 
-def clasificar(nombre: str) -> dict:
+def clasificar(nombre: str, ids: dict[str, str] | None = None) -> dict:
     n = nombre.lower()
     grupo, patrones = "otro", []
     for claves, g, p in REGLAS:
@@ -48,15 +48,16 @@ def clasificar(nombre: str) -> dict:
     material = next((m for k, m in MATERIAL if k in n), "peso_corporal")
     if "(weighted)" in n:
         material = "lastre"
-    return {"exercise_template_id": f"hevy:{nombre}", "nombre": nombre, "grupo": grupo,
+    tid = (ids or {}).get(nombre.lower()) or f"hevy:{nombre}"
+    return {"exercise_template_id": tid, "nombre": nombre, "grupo": grupo,
             "patrones": patrones, "material": material}
 
 
-def construir(nombres: list[str], prohibidos: set[str]) -> tuple[list[dict], list[dict]]:
+def construir(nombres: list[str], prohibidos: set[str], ids: dict[str, str] | None = None) -> tuple[list[dict], list[dict]]:
     """Devuelve (catálogo permitido, excluidos con motivo)."""
     permitidos, excluidos = [], []
     for nombre in sorted(set(nombres)):
-        e = clasificar(nombre)
+        e = clasificar(nombre, ids)
         choque = prohibidos.intersection(e["patrones"])
         (excluidos if choque else permitidos).append({**e, **({"motivo": sorted(choque)} if choque else {})})
     return permitidos, excluidos

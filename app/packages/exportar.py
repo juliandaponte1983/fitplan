@@ -74,12 +74,17 @@ def construir(conn: sqlite3.Connection, pid: int, semana_inicio: date, instrucci
     if not a["nutricion"] or not a["estado"]["composicion_actual"]:
         raise ValueError("faltan datos de composición corporal o de perfil (fecha de nacimiento, altura)")
     avisos = list(a["alertas"])
+    if semana_inicio + timedelta(days=6) < date.today():
+        avisos.append(f"la semana {semana_inicio.isoformat()} ya ha terminado: ¿querías planificar la siguiente?")
     restr = _restricciones(conn, pid, pp)
     if not perfil_medico_vigente(conn, pid):
         avisos.append("sin perfil médico: el plan solo respeta las restricciones que declaraste en perfil.yaml")
     prohibidos = {amb for r in restr["ejercicio"] if r["nivel"] == "prohibido" for amb in r["ambito"]}
     nombres = [r[0] for r in conn.execute("SELECT DISTINCT ejercicio FROM hevy_serie WHERE perfil_id=?", (pid,))]
-    permitidos, excluidos = catalogo.construir(nombres, prohibidos)
+    ids = {r[0].lower(): r[1] for r in conn.execute("SELECT titulo, id FROM hevy_plantilla WHERE perfil_id=?", (pid,))}
+    permitidos, excluidos = catalogo.construir(nombres, prohibidos, ids)
+    if not ids:
+        avisos.append("sin catálogo de Hevy sincronizado: los ejercicios llevan ids provisionales y las rutinas no se podrán subir a Hevy")
     for e in excluidos:
         avisos.append(f"excluido del catálogo: {e['nombre']} ({', '.join(e['motivo'])})")
     ids_ok = {e["nombre"] for e in permitidos}
@@ -88,7 +93,7 @@ def construir(conn: sqlite3.Connection, pid: int, semana_inicio: date, instrucci
     acwr = a["semana_anterior"]["carga"]["acwr"]
     obj_ent = _objetivos_entreno(pp, fase, acwr)
     obj_ent["progresiones"] = [
-        {"exercise_template_id": f"hevy:{p['ejercicio']}", "nombre": p["ejercicio"], "series": p["series"],
+        {"exercise_template_id": ids.get(p["ejercicio"].lower(), f"hevy:{p['ejercicio']}"), "nombre": p["ejercicio"], "series": p["series"],
          "reps_min": p["reps_min"], "reps_max": p["reps_max"], "peso_kg": p["peso_kg"], "rpe_objetivo": p["rpe_objetivo"],
          "motivo": p["motivo"], "historial": p["historial"]}
         for p in a["fuerza"]["prescripciones"] if p["ejercicio"] in ids_ok]

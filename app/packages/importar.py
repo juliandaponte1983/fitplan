@@ -35,6 +35,10 @@ def importar(conn: sqlite3.Connection, pid: int, ruta: Path | str, carpeta: Path
     if not fila:
         raise LookupError("el plan no corresponde a ningún paquete exportado para este perfil (paquete_id desconocido)")
     paquete = json.loads(fila[0])
+    prefijo = f"B{paquete['semana']['bloque']}S{paquete['semana']['semana_en_bloque']}"
+    for r in plan.get("entrenamiento", {}).get("rutinas", []):   # títulos homogéneos para Hevy
+        resto = re.sub(r"^\s*B\d+\s*S\d+\s*[·\-:|]?\s*", "", r.get("titulo", "")).strip()
+        r["titulo"] = f"{prefijo} · {resto or r.get('id', 'Rutina')}"
     hallazgos = validador.validar(plan, paquete)
     res = validador.resumen(hallazgos)
     estado = "rechazado" if res["bloqueos"] else "aceptado"
@@ -58,4 +62,6 @@ def importar(conn: sqlite3.Connection, pid: int, ruta: Path | str, carpeta: Path
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
         res["plan"] = str(destino)
+        from app import vista
+        res["vista"] = str(vista.generar(plan, paquete, carpeta))
     return res

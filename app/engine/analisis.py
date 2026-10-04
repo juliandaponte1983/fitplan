@@ -42,6 +42,8 @@ def analizar(conn: sqlite3.Connection, pid: int, semana_inicio: date | None = No
     p = conn.execute("SELECT * FROM perfil WHERE id=?", (pid,)).fetchone()
     tz = ZoneInfo(p["zona_horaria"])
     aj = ajustes(conn, pid)
+    if aj.get("fc_reposo_garmin") and not json.loads(conn.execute("SELECT ajustes_json FROM perfil WHERE id=?", (pid,)).fetchone()[0] or "{}").get("fc_reposo"):
+        aj["fc_reposo"] = aj["fc_reposo_garmin"]
     semana_inicio = semana_inicio or lunes(datetime.now(tz).date() + timedelta(days=7 if datetime.now(tz).weekday() >= 5 else 0))
     hoy = semana_inicio - timedelta(days=1)                 # se analiza hasta el domingo previo
     ini_prev = semana_inicio - timedelta(days=7)

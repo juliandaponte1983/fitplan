@@ -8,6 +8,7 @@
   python -m app.cli perfil-cargar julian ../datos/julian/perfil.yaml
   python -m app.cli paquete julian ../datos/julian [--semana 2026-09-28] [--nota "esta semana viajo el jueves"]
   python -m app.cli plan-importar julian ../datos/julian respuesta_claude.md
+  python -m app.cli vista julian ../datos/julian [--semana 2026-09-28]
 """
 from __future__ import annotations
 
@@ -58,6 +59,10 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("alias")
     p.add_argument("carpeta")
     p.add_argument("respuesta", help="fichero con la respuesta de Claude (.md o .json)")
+    p = sub.add_parser("vista")
+    p.add_argument("alias")
+    p.add_argument("carpeta")
+    p.add_argument("--semana", help="lunes de la semana (por defecto, el último plan aceptado)")
     a = ap.parse_args(argv)
 
     conn = conectar()
@@ -120,6 +125,17 @@ def main(argv: list[str] | None = None) -> None:
         for h in r["hallazgos"]:
             print(f"  {'✘' if h['severidad'] == 'bloqueo' else '·'} [{h['regla']}] {h['mensaje']}")
         print("  →", r.get("plan") or f"lleva a Claude el fichero de corrección: {r['correccion']}")
+        if r.get("vista"):
+            print("  → vista:", r["vista"])
+    elif a.cmd == "vista":
+        from app import vista
+        pid = ingesta.perfil_id(conn, a.alias)
+        q = ("SELECT p.json, k.json FROM plan p JOIN paquete k ON k.id = p.paquete_id WHERE p.perfil_id=? AND p.estado='aceptado'"
+             + (" AND p.semana_inicio=?" if a.semana else "") + " ORDER BY p.semana_inicio DESC, p.id DESC LIMIT 1")
+        fila = conn.execute(q, (pid, a.semana) if a.semana else (pid,)).fetchone()
+        if not fila:
+            raise LookupError("no hay ningún plan aceptado" + (f" para la semana {a.semana}" if a.semana else ""))
+        print(vista.generar(json.loads(fila[0]), json.loads(fila[1]), a.carpeta))
 
 
 def _informe(r: dict) -> str:

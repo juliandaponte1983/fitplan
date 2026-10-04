@@ -143,3 +143,29 @@ def test_importar_acepta_y_rechaza(entorno):
     (tmp / "malo.json").write_text(json.dumps(malo), encoding="utf-8")
     r2 = importar.importar(conn, pid, tmp / "malo.json", tmp)
     assert r2["estado"] == "rechazado" and "V6" in Path(r2["correccion"]).read_text(encoding="utf-8")
+
+
+def test_v16_no_le_gusta_es_aviso(entorno):
+    from app.packages import validador
+    paq, _ = _paquete(entorno)
+    paq["perfil"]["preferencias_alimentarias"]["no_le_gusta"] = ["legumbres"]
+    plan = plan_valido(paq)
+    plan["nutricion"]["dias"][0]["comidas"][0]["items"][0]["alimento"] = "lentejas estofadas"
+    h = validador.validar(plan, paq)
+    assert any(x.regla == "V16" and x.severidad == "aviso" for x in h)
+    assert not any(x.severidad == "bloqueo" for x in h)
+
+
+def test_importar_normaliza_titulos_y_genera_vista(entorno):
+    from app.packages import exportar, importar
+    conn, pid, tmp = entorno
+    paq, _ = _paquete(entorno)
+    exportar.guardar(conn, pid, paq, tmp)
+    plan = plan_valido(paq)
+    plan["entrenamiento"]["rutinas"][0]["titulo"] = "B1S2 - Pierna"
+    (tmp / "r.json").write_text(json.dumps(plan), encoding="utf-8")
+    r = importar.importar(conn, pid, tmp / "r.json", tmp)
+    guardado = json.loads(Path(r["plan"]).read_text(encoding="utf-8"))
+    assert guardado["entrenamiento"]["rutinas"][0]["titulo"] == "B1S1 · Pierna"
+    html = Path(r["vista"]).read_text(encoding="utf-8")
+    assert "B1S1 · Pierna" in html and "__DATOS__" not in html

@@ -73,6 +73,12 @@
     ],
     "bebidas alcohólicas": [
       "alcohol"
+    ],
+    "legumbres": [
+      "legumbres"
+    ],
+    "legumbre": [
+      "legumbres"
     ]
   },
   "grupos": {
@@ -687,6 +693,33 @@
         "sustituto de sal"
       ],
       "excepciones": []
+    },
+    "legumbres": {
+      "alergeno_ue": false,
+      "incluye": [
+        "legumbre",
+        "lenteja",
+        "garbanzo",
+        "alubia",
+        "judia blanca",
+        "judia pinta",
+        "judion",
+        "frijol",
+        "guisante",
+        "haba",
+        "soja",
+        "edamame",
+        "hummus",
+        "falafel",
+        "cacahuete",
+        "altramuz"
+      ],
+      "excepciones": [
+        "judias verdes",
+        "judia verde",
+        "vainas"
+      ],
+      "notas": "Las judías verdes se tratan como verdura."
     }
   }
 }

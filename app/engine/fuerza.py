@@ -160,8 +160,11 @@ def prescribir(h: HistorialEjercicio, fase: str, rango: tuple[int, int] | None =
 
     reps_al_peso = [r for p, r, _ in ult.series if p == pt and r]
     if permitir_subir_peso and reps_al_peso and all(r >= rmax for r in reps_al_peso):
-        peso = pt + min(paso, max(pt * tope, paso / 2))
-        return Prescripcion(h.ejercicio, n, rmin, rmax, _redondear(peso, paso / 2), rpe, "subir_peso", hist)
+        if "(barbell)" in h.ejercicio.lower():   # con barra hay discos pequeños: se respeta el tope %
+            peso = _redondear(pt + min(paso, max(pt * tope, paso / 2)), paso / 2)
+        else:                                     # mancuernas y máquinas van por saltos fijos
+            peso = pt + paso
+        return Prescripcion(h.ejercicio, n, rmin, rmax, peso, rpe, "subir_peso", hist)
     fallos = [s for s in h.ultimas(2) if any((r or 0) < rmin for p, r, _ in s.series if p == peso_trabajo(s))]
     if len(fallos) == 2:
         return Prescripcion(h.ejercicio, n, rmin, rmax, _redondear(pt * 0.95, paso), rpe, "mantener", hist)

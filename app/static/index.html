@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FitPlan</title>
+<style>
+:root{--bg:#f6f5f2;--panel:#fff;--ink:#1d1f22;--muted:#6b6f76;--line:#e4e2dc;--accent:#1f6f5c;--accent-ink:#fff;--accent-soft:#e3f0ec;
+--warn:#9a5b00;--warn-soft:#fbf0de;--bad:#a8322d;--bad-soft:#fbe6e4;--ok:#1f6f5c;--chip:#efeee9}
+@media (prefers-color-scheme:dark){:root{--bg:#141517;--panel:#1c1e21;--ink:#ebeae6;--muted:#9a9ea4;--line:#2c2f33;--accent:#5fc2a6;--accent-ink:#0d1a16;
+--accent-soft:#1d332d;--warn:#f0b35a;--warn-soft:#3a2c17;--bad:#ef8a83;--bad-soft:#3a1d1b;--ok:#5fc2a6;--chip:#26292d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.top{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .in{max-width:1080px;margin:auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.logo{font-weight:800;font-size:18px;letter-spacing:-.02em;margin-right:6px}
+.logo span{color:var(--accent)}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}
+.tabs{display:flex;gap:4px;overflow-x:auto}
+.tabs button,.btn,.btn2{border:0;font:inherit;font-weight:600;cursor:pointer;border-radius:999px;padding:8px 14px;white-space:nowrap}
+.tabs button{background:none;color:var(--muted)}
+.tabs button.on{background:var(--accent-soft);color:var(--accent)}
+.btn{background:var(--accent);color:var(--accent-ink)}
+.btn2{background:var(--chip);color:var(--ink)}
+.btn:disabled,.btn2:disabled{opacity:.5;cursor:wait}
+main{max-width:1080px;margin:auto;padding:16px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 14px}
+.card h2{margin:0 0 4px;font-size:17px}
+.card h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px;margin-right:8px}
+.sub{color:var(--muted);font-size:13.5px}
+.fila{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi b{display:block;font-size:22px;letter-spacing:-.02em}
+.kpi span{color:var(--muted);font-size:12.5px}
+.nav-sem{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.nav-sem h2{margin:0;font-size:18px;flex:1;text-align:center}
+iframe{width:100%;height:calc(100vh - 210px);min-height:600px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.msg{padding:10px 12px;border-radius:10px;font-size:14px;margin-top:10px;white-space:pre-wrap}
+.msg.ok{background:var(--accent-soft);color:var(--ok)} .msg.warn{background:var(--warn-soft);color:var(--warn)} .msg.bad{background:var(--bad-soft);color:var(--bad)}
+.lista{margin:8px 0 0;padding-left:18px;font-size:14px} .lista li{margin:2px 0}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.sobre{border-color:var(--accent);color:var(--accent)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.pill.ok{background:var(--accent-soft);color:var(--ok)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px} th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line)} th{color:var(--muted);font-weight:600}
+.oculto{display:none}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);max-width:420px;width:92%}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px} label input,label select{width:100%}
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <div class="logo">Fit<span>Plan</span></div>
+  <select id="perfil" aria-label="Perfil"></select>
+  <button class="btn2" id="nuevo">+ Perfil</button>
+  <div class="tabs" id="tabs"></div>
+</div></div>
+<main id="main"></main>
+
+<dialog id="dlgPerfil"><form method="dialog" id="fPerfil">
+  <h3 style="margin-top:0">Nuevo perfil</h3>
+  <label>Alias (minúsculas, sin espacios)<input name="alias" required pattern="[a-z0-9_-]{2,30}" placeholder="marcela"></label>
+  <label>Sexo<select name="sexo"><option value="M">Mujer</option><option value="H">Hombre</option></select></label>
+  <label>Fecha de nacimiento<input name="nacimiento" type="date" required></label>
+  <label>Altura (cm)<input name="altura" type="number" step="0.5" min="100" max="230" required></label>
+  <div class="fila"><button class="btn" value="ok">Crear</button><button class="btn2" value="cancel" formnovalidate>Cancelar</button></div>
+</form></dialog>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const H = {"X-FitPlan":"1"};
+async function api(ruta, {metodo="GET", json, form}={}) {
+  const op = {method: metodo, headers: {...H}};
+  if (json !== undefined) { op.headers["Content-Type"]="application/json"; op.body=JSON.stringify(json); }
+  if (form) op.body = form;
+  let r;
+  try { r = await fetch(ruta, op); }
+  catch(e){ throw new Error("No hay conexión con FitPlan: ¿sigue abierta la Terminal con «python -m app.servidor»?"); }
+  const d = r.headers.get("content-type")?.includes("json") ? await r.json() : await r.text();
+  if (!r.ok) throw new Error(d?.detail ? (typeof d.detail==="string"?d.detail:JSON.stringify(d.detail)) : `${r.status} ${r.statusText}`);
+  return d;
+}
+const fmt = f => new Date(f+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short"});
+const sumaDias = (f,n) => { const d=new Date(f+"T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const lunesDe = f => { const d=new Date(f+"T12:00:00"); const w=(d.getDay()+6)%7; d.setDate(d.getDate()-w); return d.toISOString().slice(0,10); };
+function msg(el, tipo, texto){ el.innerHTML = `<div class="msg ${tipo}">${esc(texto)}</div>`; }
+async function ocupado(btn, fn){ const t=btn.textContent; btn.disabled=true; btn.textContent="…"; try{ await fn(); } finally { btn.disabled=false; btn.textContent=t; } }
+async function copiar(texto, btn){ await navigator.clipboard.writeText(texto); const t=btn.textContent; btn.textContent="Copiado ✓"; setTimeout(()=>btn.textContent=t,1500); }
+function descargar(nombre, texto){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([texto],{type:"text/markdown"})); a.download=nombre; a.click(); }
+const informe = i => `${i.fichero}: ${i.ya_importado?"ya importado":`${i.nuevos} nuevos, ${i.duplicados} duplicados`}${i.errores?.length?` · errores: ${i.errores.join("; ")}`:""}${i.avisos?.length?` · ${i.avisos.join("; ")}`:""}`;
+
+let S = { perfil: null, estado: null, vista: "Semana", semana: null, semanaCiclo: null, paquete: null };
+const VISTAS = ["Semana","Ciclo semanal","Progreso","Ajustes"];
+
+async function cargarPerfiles(sel){
+  const ps = await api("/api/perfiles");
+  $("#perfil").innerHTML = ps.map(p=>`<option>${esc(p.alias)}</option>`).join("");
+  let guardado = null; try { guardado = localStorage.getItem("fitplan:perfil"); } catch(e){}
+  S.perfil = sel || (ps.some(p=>p.alias===guardado) ? guardado : ps[0]?.alias);
+  if (S.perfil) $("#perfil").value = S.perfil;
+  await refrescar();
+}
+async function refrescar(){
+  if (!S.perfil) { $("#main").innerHTML = `<div class="card"><h2>Crea tu primer perfil</h2><p class="sub">Pulsa «+ Perfil».</p></div>`; return; }
+  S.estado = await api(`/api/p/${S.perfil}/estado`);
+  if (!S.semana) {
+    const hoy = lunesDe(new Date().toISOString().slice(0,10));
+    S.semana = S.estado.planes.some(p=>p.semana_inicio===hoy) ? hoy : (S.estado.planes.at(-1)?.semana_inicio || S.estado.semana_siguiente);
+  }
+  pintar();
+}
+function pintar(){
+  $("#tabs").innerHTML = VISTAS.map(v=>`<button class="${v===S.vista?"on":""}" data-v="${v}">${v}</button>`).join("");
+  ({"Semana":vSemana,"Ciclo semanal":vCiclo,"Progreso":vProgreso,"Ajustes":vAjustes})[S.vista]();
+}
+
+// ---------------------------------------------------------------- Semana
+function vSemana(){
+  const e = S.estado, c = e.composicion[0], c2 = e.composicion[1];
+  const hay = e.planes.some(p=>p.semana_inicio===S.semana);
+  const delta = c && c2 ? (c.peso_kg - c2.peso_kg) : null;
+  $("#main").innerHTML = `
+  <div class="kpis">
+    <div class="kpi"><span>Peso</span><b>${c?c.peso_kg+" kg":"—"}</b><span>${c?fmt(c.fecha_hora.slice(0,10)):""}${delta!=null?` · ${delta>0?"+":""}${delta.toFixed(1)} kg`:""}</span></div>
+    <div class="kpi"><span>Grasa</span><b>${c?.grasa_pct!=null?c.grasa_pct+" %":"—"}</b><span>Fitdays</span></div>
+    <div class="kpi"><span>Último entreno</span><b>${e.hevy.ultimo?fmt(e.hevy.ultimo):"—"}</b><span>${e.hevy.entrenos} en Hevy</span></div>
+    <div class="kpi"><span>Objetivo</span><b style="font-size:17px">${esc((e.objetivo||"—").replace("_"," "))}</b><span>${e.planes.length} planes</span></div>
+  </div>
+  <div class="nav-sem"><button class="btn2" id="ant">◀</button><h2>Semana ${fmt(S.semana)} – ${fmt(sumaDias(S.semana,6))}</h2><button class="btn2" id="sig">▶</button></div>
+  ${hay ? `<div class="fila" style="margin:0 0 10px;justify-content:flex-end">
+      <button class="btn2" id="hevy" ${e.hevy.conectado?"":"disabled title='Conecta Hevy en Ajustes'"}>Enviar rutinas a Hevy</button>
+      <a class="btn2" href="/p/${S.perfil}/vista/${S.semana}" target="_blank" style="text-decoration:none">Abrir en pestaña</a></div>
+      <div id="res"></div>
+      <iframe src="/p/${S.perfil}/vista/${S.semana}" title="Plan"></iframe>`
+    : `<div class="card"><h2>No hay plan para esta semana</h2><p class="sub">Prepáralo en 4 pasos: sincronizar datos, pesaje, paquete para Claude e importar la respuesta.</p>
+       <div class="fila"><button class="btn" id="preparar">Preparar esta semana</button></div></div>`}`;
+  $("#ant").onclick = ()=>{ S.semana=sumaDias(S.semana,-7); pintar(); };
+  $("#sig").onclick = ()=>{ S.semana=sumaDias(S.semana,7); pintar(); };
+  $("#preparar")?.addEventListener("click", ()=>{ S.vista="Ciclo semanal"; pintar(); });
+  $("#hevy")?.addEventListener("click", ev=>ocupado(ev.target, async()=>{
+    try { const r = await api(`/api/p/${S.perfil}/hevy/rutinas/${S.semana}`,{metodo:"POST"}); msg($("#res"),"ok","Hevy: "+r.resultado.join(" · ")); }
+    catch(err){ msg($("#res"),"bad",err.message); }
+  }));
+}
+
+// ---------------------------------------------------------------- Ciclo semanal
+function cabDatos(e){
+  const sync = (n,x)=> x.sync ? `<span class="pill ${x.conectado?"ok":""}">${n}: ${new Date(x.sync.ultima).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</span>` : `<span class="pill ${x.conectado?"ok":"bad"}">${n}: ${x.conectado?"conectado":"sin conectar"}</span>`;
+  return `<div class="sub">Hevy: ${e.hevy.entrenos} entrenos (último ${e.hevy.ultimo?fmt(e.hevy.ultimo):"—"}) · Garmin: ${e.garmin.actividades} actividades (última ${e.garmin.ultima?fmt(e.garmin.ultima):"—"})</div>
+    <div class="fila">${sync("Hevy",e.hevy)} ${sync("Garmin",e.garmin)}</div>`;
+}
+function vCiclo(){
+  const e = S.estado;
+  S.semanaCiclo = S.semanaCiclo || e.semana_siguiente;
+  const sync = (n,x)=> x.sync ? `<span class="pill ${x.conectado?"ok":""}">${n}: ${new Date(x.sync.ultima).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</span>` : `<span class="pill ${x.conectado?"ok":"bad"}">${n}: ${x.conectado?"conectado":"sin conectar"}</span>`;
+  $("#main").innerHTML = `
+  <div class="card"><h2>Semana a planificar</h2>
+    <div class="fila"><input type="date" id="semana" value="${S.semanaCiclo}" step="7"> <span class="sub">Siempre un lunes.</span></div></div>
+  <div class="card"><h2><span class="n">1</span>Datos al día</h2>
+    <div id="cabdatos">${cabDatos(e)}</div>
+    <div class="fila"><button class="btn" id="sync">Sincronizar Hevy y Garmin</button></div>
+    <div id="rsync"></div>
+    <div class="drop" id="drop" style="margin-top:12px">Arrastra aquí CSV de Hevy, ZIP/FIT de Garmin, JSON de Fitdays o el .md médico — o haz clic<input type="file" id="fich" multiple class="oculto"></div>
+    <div id="rsubir"></div></div>
+  <div class="card"><h2><span class="n">2</span>Pesaje (Fitdays)</h2>
+    <div class="sub">Última medición: ${e.composicion[0]?`${fmt(e.composicion[0].fecha_hora.slice(0,10))} · ${e.composicion[0].peso_kg} kg`:"ninguna"}. Pésate en ayunas; lleva la captura a Claude con este prompt y pega aquí su JSON.</div>
+    <div class="fila"><button class="btn2" id="p02">Copiar prompt de Fitdays</button></div>
+    <textarea id="tcomp" placeholder="Pega aquí el JSON que devuelve Claude…" style="min-height:90px;margin-top:10px"></textarea>
+    <div class="fila"><button class="btn" id="bcomp">Importar medición</button></div><div id="rcomp"></div></div>
+  <div class="card"><h2><span class="n">3</span>Paquete para Claude</h2>
+    <label>Nota para esta semana (opcional)<input id="nota" placeholder="p.ej. el jueves viajo; me molesta el hombro derecho"></label>
+    <div class="fila"><button class="btn" id="bpaq">Generar paquete</button></div><div id="rpaq"></div></div>
+  <div class="card"><h2><span class="n">4</span>Respuesta de Claude</h2>
+    <div class="sub">Pega la respuesta completa (con o sin el bloque \`\`\`json).</div>
+    <textarea id="tplan" placeholder="Pega aquí la respuesta de Claude…"></textarea>
+    <div class="fila"><button class="btn" id="bplan">Validar e importar plan</button></div><div id="rplan"></div></div>`;
+  $("#semana").onchange = ev => { S.semanaCiclo = lunesDe(ev.target.value); ev.target.value=S.semanaCiclo; };
+  $("#sync").onclick = ev => ocupado(ev.target, async()=>{
+    const r = await api(`/api/p/${S.perfil}/sincronizar`,{metodo:"POST"});
+    $("#rsync").innerHTML = ["hevy","garmin"].map(f=>{ const x=r[f];
+      return x.ok ? `<div class="msg ok">${f}: ${esc(x.informes.map(informe).join(" · ")||"sin novedades")}</div>` : `<div class="msg bad">${f}: ${esc(x.error)}</div>`; }).join("");
+    S.estado = await api(`/api/p/${S.perfil}/estado`); $("#cabdatos").innerHTML = cabDatos(S.estado);
+  });
+  const drop=$("#drop"), fich=$("#fich");
+  drop.onclick=()=>fich.click();
+  ["dragover","dragenter"].forEach(t=>drop.addEventListener(t,ev=>{ev.preventDefault();drop.classList.add("sobre");}));
+  ["dragleave","drop"].forEach(t=>drop.addEventListener(t,()=>drop.classList.remove("sobre")));
+  const subir = async files => { const f=new FormData(); [...files].forEach(x=>f.append("ficheros",x));
+    try { const r=await api(`/api/p/${S.perfil}/subir`,{metodo:"POST",form:f}); $("#rsubir").innerHTML=`<ul class="lista">${r.map(i=>`<li>${esc(informe(i))}</li>`).join("")}</ul>`; S.estado=await api(`/api/p/${S.perfil}/estado`); $("#cabdatos").innerHTML = cabDatos(S.estado); }
+    catch(err){ msg($("#rsubir"),"bad",err.message); } };
+  drop.addEventListener("drop",ev=>{ev.preventDefault(); subir(ev.dataTransfer.files);});
+  fich.onchange=()=>subir(fich.files);
+  $("#p02").onclick = async ev => copiar((await api("/api/prompts/fitdays")).texto, ev.target);
+  $("#bcomp").onclick = ev => ocupado(ev.target, async()=>{
+    try { const r=await api(`/api/p/${S.perfil}/composicion`,{metodo:"POST",json:{texto:$("#tcomp").value}});
+      msg($("#rcomp"), r.errores?.length?"bad":(r.avisos?.length?"warn":"ok"), informe(r)); S.estado=await api(`/api/p/${S.perfil}/estado`); }
+    catch(err){ msg($("#rcomp"),"bad",err.message); } });
+  $("#bpaq").onclick = ev => ocupado(ev.target, async()=>{
+    try { const r=await api(`/api/p/${S.perfil}/paquete`,{metodo:"POST",json:{semana:S.semanaCiclo,nota:$("#nota").value}}); S.paquete=r; const o=r.objetivos;
+      $("#rpaq").innerHTML = `${r.avisos.length?`<div class="msg warn">${r.avisos.map(esc).join("\n")}</div>`:""}
+        <div class="msg ok">Paquete listo · fase ${esc(r.semana.fase)} · ${o.sesiones_fuerza} fuerza + ${o.sesiones_cardio} cardio · Z2 ≥${o.min_z2_semana} min · ${o.kcal_entreno}/${o.kcal_descanso} kcal · ${o.proteina_g} g proteína</div>
+        <div class="fila"><button class="btn" id="cpaq">Copiar para Claude</button><button class="btn2" id="dpaq">Descargar ${esc(r.nombre)}</button>
+        <a class="btn2" href="https://claude.ai/new" target="_blank" rel="noopener" style="text-decoration:none">Abrir Claude ↗</a></div>`;
+      $("#cpaq").onclick = e2 => copiar(r.md, e2.target); $("#dpaq").onclick = ()=>descargar(r.nombre, r.md); }
+    catch(err){ msg($("#rpaq"),"bad",err.message); } });
+  $("#bplan").onclick = ev => ocupado(ev.target, async()=>{
+    try { const r=await api(`/api/p/${S.perfil}/plan`,{metodo:"POST",json:{texto:$("#tplan").value}});
+      const lista = `<ul class="lista">${r.hallazgos.map(h=>`<li>${h.severidad==="bloqueo"?"✘":"·"} [${h.regla}] ${esc(h.mensaje)}</li>`).join("")}</ul>`;
+      const semPlan = (r.plan||r.correccion||"").match(/_(\d{4}-\d{2}-\d{2})\./)?.[1];
+      const otra = semPlan && semPlan!==S.semanaCiclo ? `<div class="msg bad">Ojo: esta respuesta es de la semana del ${fmt(semPlan)}, no de la del ${fmt(S.semanaCiclo)}. Seguramente es la respuesta a un paquete anterior: copia el paquete nuevo en un chat nuevo de Claude.</div>` : "";
+      if (r.estado==="aceptado") { $("#rplan").innerHTML = `${otra}<div class="msg ok">Plan ACEPTADO para la semana del ${semPlan?fmt(semPlan):"?"} · ${r.avisos} avisos</div>${lista}<div class="fila"><button class="btn" id="verplan">Ver el plan</button></div>`;
+        S.estado = await api(`/api/p/${S.perfil}/estado`); S.semana = semPlan || S.semana;
+        $("#verplan").onclick = ()=>{ S.vista="Semana"; pintar(); }; }
+      else { $("#rplan").innerHTML = `${otra}<div class="msg bad">Plan RECHAZADO · ${r.bloqueos} bloqueos</div>${lista}<div class="fila"><button class="btn" id="ccor">Copiar corrección para Claude</button></div><div class="sub">Pégala en el mismo chat de Claude y vuelve a importar su respuesta.</div>`;
+        $("#ccor").onclick = e2 => copiar(r.correccion_md, e2.target); } }
+    catch(err){ msg($("#rplan"),"bad",err.message); } });
+}
+
+// ---------------------------------------------------------------- Progreso
+async function vProgreso(){
+  $("#main").innerHTML = `<div class="card"><div class="sub">Calculando…</div></div>`;
+  try {
+    const a = await api(`/api/p/${S.perfil}/analisis?semana=${S.semana}`), c=a.semana_anterior.carga, n=a.nutricion;
+    $("#main").innerHTML = `
+    <div class="kpis">
+      <div class="kpi"><span>Fase sugerida</span><b style="font-size:17px">${esc(a.semana.fase_sugerida)}</b><span>${a.semana.dias_sin_entrenar??"—"} días sin entrenar</span></div>
+      <div class="kpi"><span>ACWR</span><b>${c.acwr??"—"}</b><span>aguda ${c.aguda_7d} / crónica ${c.cronica_semanal_28d}</span></div>
+      <div class="kpi"><span>TRIMP semana previa</span><b>${c.trimp_semana}</b><span>${a.semana_anterior.sesiones_realizadas} sesiones</span></div>
+      <div class="kpi"><span>Tendencia peso</span><b>${a.estado.tendencia_4s.peso_kg_sem!=null?a.estado.tendencia_4s.peso_kg_sem+" kg/sem":"—"}</b><span>${a.estado.tendencia_4s.n_mediciones} mediciones</span></div>
+    </div>
+    ${a.alertas.length?`<div class="msg warn">${a.alertas.map(esc).join("\n")}</div>`:""}
+    <div class="grid2" style="margin-top:14px">
+      <div class="card"><h2>Fuerza · prescripción</h2><table><tr><th>Ejercicio</th><th>Pauta</th><th>Motivo</th></tr>
+        ${a.fuerza.prescripciones.map(p=>`<tr><td>${esc(p.ejercicio)}<div class="sub">${esc(p.historial)}</div></td><td>${p.series}×${p.reps_min}–${p.reps_max} @ ${p.peso_kg!=null?p.peso_kg+" kg":"PC"}</td><td><span class="pill">${esc(p.motivo)}</span></td></tr>`).join("")}</table></div>
+      <div class="card"><h2>Progresión (1RM estimado)</h2><table><tr><th>Ejercicio</th><th>Inicio</th><th>Último</th><th>Máx</th></tr>
+        ${a.fuerza.progresion.map(p=>`<tr><td>${esc(p.ejercicio)} ${p.estancado?'<span class="pill bad">estancado</span>':""}</td><td>${p.e1rm_primero??"—"}</td><td>${p.e1rm_ultimo??"—"}</td><td>${p.e1rm_max??"—"}</td></tr>`).join("")}</table></div>
+    </div>
+    ${n?`<div class="card"><h2>Nutrición objetivo</h2><div class="sub">${esc(n.base_calculo)}</div>
+      <div class="kpis" style="margin-top:10px"><div class="kpi"><span>Entreno</span><b>${n.kcal_entreno}</b><span>kcal</span></div><div class="kpi"><span>Descanso</span><b>${n.kcal_descanso}</b><span>kcal</span></div>
+      <div class="kpi"><span>Proteína</span><b>${n.proteina_g} g</b><span>diaria</span></div><div class="kpi"><span>Grasa mín.</span><b>${n.grasa_g_min} g</b><span>fibra ≥${n.fibra_g_min} g</span></div></div></div>`:""}`;
+  } catch(err){ msg($("#main"),"bad",err.message); }
+}
+
+// ---------------------------------------------------------------- Ajustes
+async function vAjustes(){
+  const e = S.estado, y = await api(`/api/p/${S.perfil}/perfil-yaml`);
+  $("#main").innerHTML = `
+  <div class="grid2">
+    <div class="card"><h2>Hevy</h2><div class="sub">${e.hevy.conectado?`Conectado · ${e.hevy.plantillas} ejercicios en catálogo`:"Sin conectar. Clave en hevy.com → Settings → API."}</div>
+      <div class="fila"><input id="hclave" type="password" placeholder="Clave de API de Hevy" autocomplete="off" style="flex:1"><button class="btn" id="hguardar">Conectar</button>${e.hevy.conectado?'<button class="btn2" id="hborrar">Desconectar</button>':""}</div><div id="rh"></div></div>
+    <div class="card"><h2>Garmin Connect</h2><div class="sub">${e.garmin.conectado?"Conectado (token en el Llavero; la contraseña no se guarda).":"Sin conectar. Tu contraseña solo se usa para iniciar sesión y no se guarda."}</div>
+      <div id="gform" class="${e.garmin.conectado?"oculto":""}"><div class="fila"><input id="gmail" type="email" placeholder="email" autocomplete="username" style="flex:1"><input id="gpass" type="password" placeholder="contraseña" autocomplete="current-password" style="flex:1"></div>
+      <div class="fila"><button class="btn" id="gentrar">Conectar</button></div></div>
+      <div id="gmfa" class="oculto"><div class="fila"><input id="gcod" placeholder="Código MFA" inputmode="numeric" style="flex:1"><button class="btn" id="genviar">Verificar</button></div></div>
+      ${e.garmin.conectado?'<div class="fila"><button class="btn2" id="gsalir">Desconectar</button></div>':""}<div id="rg"></div></div>
+  </div>
+  <div class="card"><h2>Perfil médico</h2><div class="sub">${e.medico?"Cargado (solo el bloque YAML, cifrado).":"Sin perfil médico."} Anonimiza tus informes, llévalos a Claude con este prompt y sube aquí el .md resultante (en «Ciclo semanal → Datos al día» o arrastrándolo).</div>
+    <div class="fila"><button class="btn2" id="p01">Copiar prompt médico</button></div></div>
+  <div class="card"><h2>Perfil de entrenamiento y alimentación</h2><div class="sub">${y.existe?"perfil.yaml del perfil":"Plantilla: edítala y guarda"}</div>
+    <textarea id="yaml" style="min-height:420px">${esc(y.texto)}</textarea>
+    <div class="fila"><button class="btn" id="yguardar">Guardar perfil</button></div><div id="ry"></div></div>`;
+  $("#hguardar").onclick = ev => ocupado(ev.target, async()=>{ try{ const r=await api(`/api/p/${S.perfil}/hevy/clave`,{metodo:"PUT",json:{clave:$("#hclave").value}}); msg($("#rh"),"ok",`Conectado · ${r.entrenos} entrenos en Hevy`); S.estado=await api(`/api/p/${S.perfil}/estado`);}catch(err){msg($("#rh"),"bad",err.message);} });
+  $("#hborrar")?.addEventListener("click", async()=>{ await api(`/api/p/${S.perfil}/hevy/clave`,{metodo:"DELETE"}); await refrescar(); });
+  $("#gentrar").onclick = ev => ocupado(ev.target, async()=>{ try{ const r=await api(`/api/p/${S.perfil}/garmin/login`,{metodo:"POST",json:{email:$("#gmail").value,password:$("#gpass").value}});
+      $("#gpass").value=""; if(r.estado==="mfa"){ $("#gmfa").classList.remove("oculto"); msg($("#rg"),"warn","Introduce el código que te ha enviado Garmin"); } else { msg($("#rg"),"ok","Garmin conectado"); await refrescar(); } }catch(err){msg($("#rg"),"bad",err.message);} });
+  $("#genviar").onclick = ev => ocupado(ev.target, async()=>{ try{ await api(`/api/p/${S.perfil}/garmin/login`,{metodo:"POST",json:{mfa:$("#gcod").value}}); msg($("#rg"),"ok","Garmin conectado"); await refrescar(); }catch(err){msg($("#rg"),"bad",err.message);} });
+  $("#gsalir")?.addEventListener("click", async()=>{ await api(`/api/p/${S.perfil}/garmin/login`,{metodo:"DELETE"}); await refrescar(); });
+  $("#p01").onclick = async ev => copiar((await api("/api/prompts/medico")).texto, ev.target);
+  $("#yguardar").onclick = ev => ocupado(ev.target, async()=>{ try{ await api(`/api/p/${S.perfil}/perfil-yaml`,{metodo:"PUT",json:{texto:$("#yaml").value}}); msg($("#ry"),"ok","Perfil guardado y cargado"); S.estado=await api(`/api/p/${S.perfil}/estado`);}catch(err){msg($("#ry"),"bad",err.message);} });
+}
+
+// ---------------------------------------------------------------- eventos globales
+$("#tabs").onclick = ev => { const v=ev.target.closest("button")?.dataset.v; if(v){ S.vista=v; pintar(); } };
+$("#perfil").onchange = async ev => { S.perfil=ev.target.value; S.semana=null; try{localStorage.setItem("fitplan:perfil",S.perfil);}catch(e){} await refrescar(); };
+$("#nuevo").onclick = () => $("#dlgPerfil").showModal();
+$("#fPerfil").addEventListener("submit", async ev => {
+  if (ev.submitter?.value !== "ok") return;
+  const f = new FormData(ev.target);
+  try { await api("/api/perfiles",{metodo:"POST",json:{alias:f.get("alias"),sexo:f.get("sexo"),nacimiento:f.get("nacimiento"),altura:+f.get("altura")}});
+        await cargarPerfiles(f.get("alias")); S.vista="Ajustes"; pintar(); }
+  catch(err){ alert(err.message); }
+});
+cargarPerfiles().catch(err=>msg($("#main"),"bad",err.message));
+</script>
+</body>
+</html>

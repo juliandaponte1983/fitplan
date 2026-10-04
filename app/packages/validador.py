@@ -216,6 +216,15 @@ def validar(plan: dict, paquete: dict, dic: Diccionario | None = None) -> list[H
     faltan = sorted({i["alimento"] for r in recetas.values() for i in r["ingredientes"] if norm(i["alimento"]) not in lista})
     if faltan:
         A("V15", f"no están en la lista de la compra: {', '.join(faltan[:10])}{'…' if len(faltan) > 10 else ''}")
+
+    # V16 preferencias (no bloquea: es gusto, no salud)
+    no_gusta = paquete["perfil"].get("preferencias_alimentarias", {}).get("no_le_gusta", [])
+    vistos = set()
+    for donde, al in alimentos:
+        for h in dic.comprobar([al], no_gusta):
+            if (al, h["restriccion"]) not in vistos:
+                vistos.add((al, h["restriccion"]))
+                A("V16", f"{donde}: '{al}' choca con lo que no te gusta ({h['restriccion']})")
     return H
 
 

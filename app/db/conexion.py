@@ -6,13 +6,13 @@ from pathlib import Path
 
 from app import config
 
-MIGRACIONES = [Path(__file__).with_name(n) for n in ("esquema.sql", "migracion_002.sql", "migracion_003.sql")]  # índice = versión - 1
+MIGRACIONES = [Path(__file__).with_name(n) for n in ("esquema.sql", "migracion_002.sql", "migracion_003.sql", "migracion_004.sql")]  # índice = versión - 1
 
 
 def conectar(ruta: Path | str | None = None) -> sqlite3.Connection:
     ruta = Path(ruta or config.DB_PATH)
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(ruta)
+    conn = sqlite3.connect(ruta, check_same_thread=False)  # FastAPI usa un hilo distinto por petición; una conexión por petición
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA journal_mode = WAL")
